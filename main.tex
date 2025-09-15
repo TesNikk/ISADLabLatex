@@ -137,11 +137,12 @@
     \restoregeometry
 \end{titlepage}
 
-% Reset page style after title page
-\thispagestyle{empty}
+% Reset page numbering and style after title page
+\cleardoublepage
+\pagenumbering{roman}
+\setcounter{page}{1}
 
 % Table of Contents setup with professional styling
-\addtocontents{toc}{\protect\thispagestyle{empty}}
 \renewcommand{\contentsname}{\color{chapterblue}\Large Table of Contents}
 \renewcommand{\cftchapfont}{\bfseries\color{chapterblue}}
 \renewcommand{\cftchappagefont}{\bfseries\color{chapterblue}}
@@ -149,9 +150,21 @@
 \renewcommand{\cftsecpagefont}{\color{sectionblue}}
 \renewcommand{\cftsubsecfont}{\color{subsectionteal}}
 \renewcommand{\cftsubsecpagefont}{\color{subsectionteal}}
-\tableofcontents
 
-\newpage
+% Set page style for TOC
+\pagestyle{plain}
+\tableofcontents
+\thispagestyle{plain}
+
+% Start main content with Arabic numbering
+\cleardoublepage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+% Start main content with Arabic numbering
+\cleardoublepage
+\pagenumbering{arabic}
+\setcounter{page}{1}
 
 % Title format for chapter and sections with professional colors
 \titleformat{\chapter}[display]
@@ -169,6 +182,7 @@
   {\color{subsectionteal}\thesubsection}{1em}
   {\large\color{subsectionteal}}
 
+% Set up page headers and footers
 \pagestyle{fancy}
 \fancyhf{}  % Clear all header and footer fields
 \fancyfoot[C]{\thepage}   
@@ -176,7 +190,6 @@
 
 % Chapters
 \chapter{Recognition of Need}
-\thispagestyle{empty}  
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}
@@ -245,7 +258,6 @@ The recognition of these problems speaks to the necessity of an organized and co
 \newpage
 
 \chapter{Initial Feasibility Study}
-\thispagestyle{empty}  
 \section{Introduction}
 A feasibility study is a critical milestone in information system analysis and design because it determines the practicability and feasibility of proposed solutions before their implementation on a wide scale. This chapter examines how Chorcha can address the problems discussed in the previous section by taking into consideration various solution alternatives alternatives and weighing them against factors such as cost, time, technical
 complexity, and resource requirements. The objective is to arrive at the proposed solutions that are feasible and most desirable for Chorcha in the short term and long term. By thorough analysis of economic, operational, technical, and schedule factors for every problem identified, Chorcha's development team and management can make informed decisions on further action. We provide the detailed preliminary feasibility study of each important problem area, reporting findings and recommendations to direct the subsequent system design and implementation phases.
@@ -1908,7 +1920,6 @@ In conclusion, Chorcha’s roadmap should integrate all three systems in phases-
 \newpage
 
 \chapter{Design}
-\thispagestyle{empty}
 
 \section{Introduction}
 
@@ -2029,7 +2040,114 @@ The enhanced context diagram maintains the core external entities identified in 
 
 The Level 1 DFD of the proposed system introduces significant enhancements to the core processes while maintaining the existing process numbering scheme for continuity. Modified and new processes are highlighted with distinctive colors and shading to clearly indicate improvements.
 
-
+\begin{figure}[H]
+    \centering
+    \scalebox{0.7}{%
+    \begin{tikzpicture}[
+        node distance=3cm,
+        entity/.style={rectangle, draw=entitygreen, very thick, minimum width=2.2cm, minimum height=1cm, fill=lightgreen, text=textblack},
+        process/.style={circle, draw=processblue, very thick, minimum size=2.5cm, fill=lightblue, text=textblack},
+        enhanced/.style={circle, draw=red, very thick, minimum size=2.5cm, fill=pink, text=textblack},
+        newprocess/.style={circle, draw=orange, very thick, minimum size=2.5cm, fill=lightorange, text=textblack},
+        datastore/.style={rectangle, draw=datastoreorange, very thick, minimum width=2.8cm, minimum height=0.8cm, fill=lightorange, text=textblack},
+        enhanced_store/.style={rectangle, draw=red, very thick, minimum width=2.8cm, minimum height=0.8cm, fill=pink, text=textblack},
+        new_store/.style={rectangle, draw=orange, very thick, minimum width=2.8cm, minimum height=0.8cm, fill=yellow, text=textblack},
+        flow/.style={->, very thick, color=flowpurple},
+        newflow/.style={->, very thick, color=red, dashed},
+        enhancedflow/.style={->, very thick, color=orange}
+    ]
+    
+    % External Entities (positioned around the diagram)
+    \node[entity] (student) at (-10, 6) {\small\textbf{Students}};
+    \node[entity] (teacher) at (-10, -6) {\small\textbf{Teachers}};
+    \node[entity] (admin) at (12, 6) {\small\textbf{Admins}};
+    \node[entity] (content) at (12, -6) {\small\textbf{Content Creators}};
+    
+    % Main Processes (arranged in logical flow)
+    \node[enhanced, text width=2.2cm, align=center] (auth) at (-6, 4) {\small\textbf{1.0\\ Enhanced\\ Authentication}};
+    \node[enhanced, text width=2.2cm, align=center] (exam) at (-2, 6) {\small\textbf{2.0\\ Smart Exam\\ Management}};
+    \node[enhanced, text width=2.2cm, align=center] (evaluation) at (2, 4) {\small\textbf{3.0\\ AI-Enhanced\\ Evaluation}};
+    \node[enhanced, text width=2.2cm, align=center] (content_mgmt) at (6, 6) {\small\textbf{4.0\\ Intelligent\\ Content Mgmt}};
+    \node[enhanced, text width=2.2cm, align=center] (reporting) at (8, 2) {\small\textbf{5.0\\ Real-time\\ Reporting}};
+    
+    % NEW Processes
+    \node[newprocess, text width=2.2cm, align=center] (offline_sync) at (-2, -2) {\small\textbf{6.0\\ Offline Sync\\ Management}};
+    \node[newprocess, text width=2.2cm, align=center] (ai_monitor) at (2, 0) {\small\textbf{7.0\\ AI Quality\\ Monitor}};
+    \node[newprocess, text width=2.2cm, align=center] (load_balance) at (-6, 0) {\small\textbf{8.0\\ Load\\ Balancer}};
+    
+    % Data Stores (positioned at bottom and sides)
+    \node[enhanced_store] (userdb) at (-8, -2) {\small D1: Enhanced Users};
+    \draw[red, very thick] (-8-1.4, -2+0.4) -- (-8-1.4, -2-0.4);
+    
+    \node[enhanced_store] (questiondb) at (-4, -6) {\small D2: Smart Questions};
+    \draw[red, very thick] (-4-1.4, -6+0.4) -- (-4-1.4, -6-0.4);
+    
+    \node[enhanced_store] (responsedb) at (0, -6) {\small D3: AI Responses};
+    \draw[red, very thick] (0-1.4, -6+0.4) -- (0-1.4, -6-0.4);
+    
+    \node[enhanced_store] (reportdb) at (4, -6) {\small D4: Live Reports};
+    \draw[red, very thick] (4-1.4, -6+0.4) -- (4-1.4, -6-0.4);
+    
+    \node[new_store] (cachedb) at (8, -4) {\small D5: Cache Store};
+    \draw[orange, very thick] (8-1.4, -4+0.4) -- (8-1.4, -4-0.4);
+    
+    \node[new_store] (aimodels) at (6, 0) {\small D6: AI Models};
+    \draw[orange, very thick] (6-1.4, 0+0.4) -- (6-1.4, 0-0.4);
+    
+    \node[new_store] (offlinedata) at (-6, -4) {\small D7: Offline Data};
+    \draw[orange, very thick] (-6-1.4, -4+0.4) -- (-6-1.4, -4-0.4);
+    
+    % Data Flows from External Entities to Processes
+    \draw[flow] (student) -- node[above, pos=0.3] {\tiny\textbf{Login}} (auth);
+    \draw[newflow] (student) to[bend right=15] node[below, pos=0.4] {\tiny\textbf{Offline Requests}} (offline_sync);
+    \draw[flow] (student) to[bend left=20] node[above, pos=0.6] {\tiny\textbf{Exam Responses}} (exam);
+    
+    \draw[flow] (teacher) -- node[below, pos=0.3] {\tiny\textbf{Manual Reviews}} (evaluation);
+    \draw[newflow] (teacher) to[bend left=15] node[above, pos=0.4] {\tiny\textbf{AI Feedback}} (ai_monitor);
+    
+    \draw[flow] (admin) -- node[above, pos=0.3] {\tiny\textbf{Config}} (reporting);
+    \draw[newflow] (admin) to[bend right=20] node[below, pos=0.6] {\tiny\textbf{Load Management}} (load_balance);
+    
+    \draw[flow] (content) -- node[below, pos=0.3] {\tiny\textbf{New Content}} (content_mgmt);
+    \draw[newflow] (content) to[bend left=15] node[above, pos=0.4] {\tiny\textbf{Trust Scores}} (ai_monitor);
+    
+    % Inter-Process Data Flows
+    \draw[enhancedflow] (auth) -- node[above, pos=0.5] {\tiny\textbf{Verified Users}} (exam);
+    \draw[enhancedflow] (exam) -- node[above, pos=0.5] {\tiny\textbf{Responses}} (evaluation);
+    \draw[newflow] (evaluation) -- node[right, pos=0.5] {\tiny\textbf{Scores}} (ai_monitor);
+    \draw[enhancedflow] (content_mgmt) -- node[below, pos=0.5] {\tiny\textbf{Validated Content}} (exam);
+    \draw[newflow] (ai_monitor) -- node[above, pos=0.5] {\tiny\textbf{Quality Metrics}} (reporting);
+    \draw[newflow] (load_balance) -- node[above, pos=0.5] {\tiny\textbf{Distributed Load}} (auth);
+    \draw[newflow] (offline_sync) -- node[below, pos=0.5] {\tiny\textbf{Cached Data}} (exam);
+    
+    % Process to Data Store Flows
+    \draw[enhancedflow] (auth) -- node[left, pos=0.5] {\tiny\textbf{User Data}} (userdb);
+    \draw[enhancedflow] (exam) -- node[left, pos=0.5] {\tiny\textbf{Questions}} (questiondb);
+    \draw[enhancedflow] (evaluation) -- node[right, pos=0.5] {\tiny\textbf{Results}} (responsedb);
+    \draw[enhancedflow] (content_mgmt) -- node[below, pos=0.5] {\tiny\textbf{Content}} (questiondb);
+    \draw[enhancedflow] (reporting) -- node[right, pos=0.5] {\tiny\textbf{Reports}} (reportdb);
+    \draw[newflow] (ai_monitor) -- node[right, pos=0.5] {\tiny\textbf{Models}} (aimodels);
+    \draw[newflow] (offline_sync) -- node[right, pos=0.5] {\tiny\textbf{Offline Cache}} (offlinedata);
+    \draw[newflow] (reporting) -- node[below, pos=0.5] {\tiny\textbf{Cache}} (cachedb);
+    
+    % Return flows to External Entities
+    \draw[enhancedflow] (exam) to[bend left=30] node[above, pos=0.6] {\tiny\textbf{Materials}} (student);
+    \draw[enhancedflow] (evaluation) to[bend right=40] node[below, pos=0.4] {\tiny\textbf{Results}} (student);
+    \draw[newflow] (offline_sync) to[bend right=25] node[below, pos=0.4] {\tiny\textbf{Offline Content}} (student);
+    
+    \draw[enhancedflow] (evaluation) to[bend left=30] node[above, pos=0.6] {\tiny\textbf{Review Tasks}} (teacher);
+    \draw[newflow] (ai_monitor) to[bend left=25] node[above, pos=0.4] {\tiny\textbf{AI Insights}} (teacher);
+    
+    \draw[enhancedflow] (reporting) to[bend right=30] node[below, pos=0.6] {\tiny\textbf{Analytics}} (admin);
+    \draw[newflow] (load_balance) to[bend right=25] node[below, pos=0.4] {\tiny\textbf{Performance Data}} (admin);
+    
+    \draw[enhancedflow] (content_mgmt) to[bend left=30] node[above, pos=0.6] {\tiny\textbf{Content Metrics}} (content);
+    \draw[newflow] (ai_monitor) to[bend left=25] node[above, pos=0.4] {\tiny\textbf{Quality Reports}} (content);
+    
+    \end{tikzpicture}
+    }
+    \caption{Enhanced Level 1 DFD - Proposed System Processes}
+\end{figure}
 
 \textbf{Process Enhancement Analysis:}
 
@@ -2504,5 +2622,965 @@ The proposed candidate system comprehensively addresses all identified problems 
 \end{enumerate}
 
 The visual indicators (color coding, shading, and dotted boxes) clearly distinguish between existing components, enhanced features, and entirely new additions, providing stakeholders with a clear understanding of the scope and impact of the proposed improvements.
+
+\section{Database Design}
+
+The database design for Chorcha's enhanced system provides the foundational data architecture that supports all the proposed improvements including AI-powered evaluation, offline synchronization, real-time analytics, and scalable performance optimization. This section presents a comprehensive database schema that addresses the identified bottlenecks while ensuring data integrity, security, and optimal performance.
+
+\subsection{Database Schema}
+
+The proposed database schema employs a hybrid relational-NoSQL approach to accommodate both structured educational data and flexible AI model storage requirements. The schema is designed with normalization principles while incorporating strategic denormalization for performance optimization in high-traffic scenarios.
+
+\textbf{Core Database Architecture:}
+
+The database architecture consists of \textbf{twelve primary tables} organized into four functional domains:
+
+\begin{enumerate}
+    \item \textbf{User Management Domain:} Handles user authentication, profiles, and role-based access control
+    \item \textbf{Content Management Domain:} Manages educational content, questions, and AI-powered quality metrics
+    \item \textbf{Assessment Domain:} Processes exam delivery, response collection, and AI-enhanced evaluation
+    \item \textbf{Analytics \& Caching Domain:} Supports real-time reporting and performance optimization
+\end{enumerate}
+
+\textbf{Table Structure Overview:}
+
+\begin{table}[H]
+\centering
+\caption{Database Schema Overview}
+\footnotesize
+\begin{tabular}{|L{3.5cm}|L{2.5cm}|L{5cm}|L{1.5cm}|}
+\hline
+\textbf{Table Name} & \textbf{Domain} & \textbf{Primary Function} & \textbf{Records} \\
+\hline
+Users & User Management & Store user authentication and profile data & 1.5M+ \\
+\hline
+User\_Sessions & User Management & Manage active sessions and tokens & 100K+ \\
+\hline
+Content\_Categories & Content Management & Organize educational content hierarchy & 500+ \\
+\hline
+Questions & Content Management & Store questions with AI trust scores & 500K+ \\
+\hline
+Question\_Trust\_Scores & Content Management & Track question quality and reliability & 500K+ \\
+\hline
+Exams & Assessment & Manage exam configurations and settings & 50K+ \\
+\hline
+Exam\_Responses & Assessment & Store student responses and AI evaluations & 10M+ \\
+\hline
+AI\_Evaluation\_Models & Assessment & Manage ML models and training data & 100+ \\
+\hline
+Offline\_Sync\_Data & Analytics \& Caching & Handle offline content synchronization & 2M+ \\
+\hline
+Performance\_Analytics & Analytics \& Caching & Store real-time system metrics & 5M+ \\
+\hline
+Report\_Cache & Analytics \& Caching & Cache frequently accessed reports & 100K+ \\
+\hline
+System\_Configuration & Analytics \& Caching & Manage platform settings and parameters & 1K+ \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Entity Relationship (ER) Diagram}
+
+The comprehensive ER diagram illustrates the relationships between all database entities, including primary keys, foreign keys, and data types with their respective sizes. The diagram uses color coding to distinguish between different domains and highlights the AI-enhanced components.
+
+\begin{figure}[H]
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tikzpicture}[
+        node distance=7cm,
+        entity/.style={rectangle, draw=blue, very thick, minimum width=4.5cm, minimum height=6cm, fill=lightblue, text=black},
+        relationship/.style={rectangle, rounded corners=8pt, draw=red, very thick, minimum width=3cm, minimum height=1.5cm, fill=pink, text=black},
+        attribute/.style={ellipse, draw=green, thick, minimum width=2cm, minimum height=1.2cm, fill=lightgreen, text=black},
+        pk/.style={ellipse, draw=red, very thick, minimum width=2cm, minimum height=1.2cm, fill=yellow, text=black},
+        fk/.style={ellipse, draw=orange, thick, minimum width=2cm, minimum height=1.2cm, fill=lightorange, text=black},
+        flow/.style={-, very thick}
+    ]
+    
+    % USER MANAGEMENT DOMAIN
+    \node[entity, text width=4cm, align=center] (users) at (-15, 16) {
+        \textbf{USERS}\\[0.3cm]
+        \textbf{PK:} user\_id\\
+        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
+        username\\
+        \tiny VARCHAR(50) NOT NULL\\[0.1cm]
+        email\\
+        \tiny VARCHAR(100) UNIQUE\\[0.1cm]
+        password\_hash\\
+        \tiny VARCHAR(255)\\[0.1cm]
+        role\_type\\
+        \tiny ENUM('student','teacher',\\
+        \tiny 'admin','content\_creator')\\[0.1cm]
+        created\_at\\
+        \tiny TIMESTAMP\\[0.1cm]
+        last\_login\\
+        \tiny TIMESTAMP\\[0.1cm]
+        is\_active\\
+        \tiny BOOLEAN DEFAULT TRUE
+    };
+    
+    \node[entity, text width=4cm, align=center] (sessions) at (-15, 6) {
+        \textbf{\small USER\_SESSIONS}\\[0.3cm]
+        \textbf{PK:} session\_id\\
+        \tiny VARCHAR(128)\\[0.1cm]
+        \textbf{FK:} user\_id\\
+        \tiny INT(11)\\[0.1cm]
+        session\_token\\
+        \tiny VARCHAR(255)\\[0.1cm]
+        created\_at\\
+        \tiny TIMESTAMP\\[0.1cm]
+        expires\_at\\
+        \tiny TIMESTAMP\\[0.1cm]
+        is\_active\\
+        \tiny BOOLEAN\\[0.1cm]
+        device\_info\\
+        \tiny JSON
+    };
+    
+    % CONTENT MANAGEMENT DOMAIN
+    \node[entity, text width=4cm, align=center] (categories) at (-7, 16) {
+        \textbf{\small CONTENT\_CATEGORIES}\\[0.3cm]
+        \textbf{PK:} category\_id\\
+        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
+        category\_name\\
+        \tiny VARCHAR(100)\\[0.1cm]
+        parent\_category\_id\\
+        \tiny INT(11) NULL\\[0.1cm]
+        description\\
+        \tiny TEXT\\[0.1cm]
+        difficulty\_level\\
+        \tiny ENUM('beginner',\\
+        \tiny 'intermediate','advanced')\\[0.1cm]
+        is\_active\\
+        \tiny BOOLEAN
+    };
+    
+    \node[entity, text width=4cm, align=center] (questions) at (1, 16) {
+        \textbf{QUESTIONS}\\[0.3cm]
+        \textbf{PK:} question\_id\\
+        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
+        \textbf{FK:} category\_id\\
+        \tiny INT(11)\\[0.1cm]
+        \textbf{FK:} created\_by\_user\_id\\
+        \tiny INT(11)\\[0.1cm]
+        question\_text\\
+        \tiny LONGTEXT\\[0.1cm]
+        question\_type\\
+        \tiny ENUM('mcq','subjective',\\
+        \tiny 'true\_false','fill\_blank')\\[0.1cm]
+        correct\_answer\\
+        \tiny TEXT\\[0.1cm]
+        answer\_options\\
+        \tiny JSON\\[0.1cm]
+        difficulty\_score\\
+        \tiny DECIMAL(3,2)\\[0.1cm]
+        created\_at\\
+        \tiny TIMESTAMP
+    };
+    
+    \node[entity, text width=4cm, align=center] (trust_scores) at (-3, 6) {
+        \textbf{\scriptsize QUESTION\_TRUST\_SCORES}\\[0.3cm]
+        \textbf{PK:} trust\_score\_id\\
+        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
+        \textbf{FK:} question\_id\\
+        \tiny INT(11) UNIQUE\\[0.1cm]
+        trust\_score\\
+        \tiny DECIMAL(4,3)\\[0.1cm]
+        user\_reports\_count\\
+        \tiny INT(11) DEFAULT 0\\[0.1cm]
+        ai\_confidence\_score\\
+        \tiny DECIMAL(4,3)\\[0.1cm]
+        expert\_validated\\
+        \tiny BOOLEAN DEFAULT FALSE\\[0.1cm]
+        last\_updated\\
+        \tiny TIMESTAMP\\[0.1cm]
+        quality\_metrics\\
+        \tiny JSON
+    };
+    
+    % ASSESSMENT DOMAIN
+    \node[entity, text width=4cm, align=center] (exams) at (9, 16) {
+        \textbf{EXAMS}\\[0.3cm]
+        \textbf{PK:} exam\_id\\
+        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
+        \textbf{FK:} created\_by\_user\_id\\
+        \tiny INT(11)\\[0.1cm]
+        exam\_title\\
+        \tiny VARCHAR(200)\\[0.1cm]
+        description\\
+        \tiny TEXT\\[0.1cm]
+        start\_time\\
+        \tiny TIMESTAMP\\[0.1cm]
+        end\_time\\
+        \tiny TIMESTAMP\\[0.1cm]
+        duration\_minutes\\
+        \tiny INT(11)\\[0.1cm]
+        max\_attempts\\
+        \tiny INT(11) DEFAULT 1\\[0.1cm]
+        passing\_score\\
+        \tiny DECIMAL(5,2)\\[0.1cm]
+        is\_published\\
+        \tiny BOOLEAN
+    };
+    
+    \node[entity, text width=4cm, align=center] (responses) at (9, 6) {
+        \textbf{\small EXAM\_RESPONSES}\\[0.3cm]
+        \textbf{PK:} response\_id\\
+        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
+        \textbf{FK:} exam\_id\\
+        \tiny INT(11)\\[0.1cm]
+        \textbf{FK:} user\_id\\
+        \tiny INT(11)\\[0.1cm]
+        \textbf{FK:} question\_id\\
+        \tiny INT(11)\\[0.1cm]
+        student\_answer\\
+        \tiny LONGTEXT\\[0.1cm]
+        ai\_score\\
+        \tiny DECIMAL(5,2)\\[0.1cm]
+        human\_score\\
+        \tiny DECIMAL(5,2) NULL\\[0.1cm]
+        ai\_confidence\\
+        \tiny DECIMAL(4,3)\\[0.1cm]
+        needs\_human\_review\\
+        \tiny BOOLEAN\\[0.1cm]
+        submitted\_at\\
+        \tiny TIMESTAMP
+    };
+    
+    \node[entity, text width=4cm, align=center] (ai_models) at (5, -4) {
+        \textbf{\scriptsize AI\_EVALUATION\_MODELS}\\[0.3cm]
+        \textbf{PK:} model\_id\\
+        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
+        model\_name\\
+        \tiny VARCHAR(100)\\[0.1cm]
+        model\_version\\
+        \tiny VARCHAR(50)\\[0.1cm]
+        model\_type\\
+        \tiny ENUM('nlp\_evaluator',\\
+        \tiny 'trust\_scorer','content\_analyzer')\\[0.1cm]
+        model\_path\\
+        \tiny VARCHAR(500)\\[0.1cm]
+        accuracy\_score\\
+        \tiny DECIMAL(5,4)\\[0.1cm]
+        training\_data\_size\\
+        \tiny INT(11)\\[0.1cm]
+        is\_active\\
+        \tiny BOOLEAN\\[0.1cm]
+        created\_at\\
+        \tiny TIMESTAMP
+    };
+    
+    % ANALYTICS & CACHING DOMAIN
+    \node[entity, text width=4cm, align=center] (offline_sync) at (17, 16) {
+        \textbf{\scriptsize OFFLINE\_SYNC\_DATA}\\[0.3cm]
+        \textbf{PK:} sync\_id\\
+        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
+        \textbf{FK:} user\_id\\
+        \tiny INT(11)\\[0.1cm]
+        content\_type\\
+        \tiny ENUM('exam','question',\\
+        \tiny 'material','progress')\\[0.1cm]
+        content\_id\\
+        \tiny INT(11)\\[0.1cm]
+        cached\_data\\
+        \tiny LONGTEXT\\[0.1cm]
+        last\_sync\_time\\
+        \tiny TIMESTAMP\\[0.1cm]
+        sync\_status\\
+        \tiny ENUM('pending','synced',\\
+        \tiny 'failed')\\[0.1cm]
+        device\_id\\
+        \tiny VARCHAR(255)
+    };
+    
+    \node[entity, text width=4cm, align=center] (analytics) at (17, 6) {
+        \textbf{\scriptsize PERFORMANCE\_ANALYTICS}\\[0.3cm]
+        \textbf{PK:} metric\_id\\
+        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
+        metric\_type\\
+        \tiny VARCHAR(50)\\[0.1cm]
+        metric\_value\\
+        \tiny DECIMAL(15,6)\\[0.1cm]
+        metadata\\
+        \tiny JSON\\[0.1cm]
+        timestamp\\
+        \tiny TIMESTAMP\\[0.1cm]
+        source\_component\\
+        \tiny VARCHAR(100)\\[0.1cm]
+        aggregation\_period\\
+        \tiny ENUM('minute','hour',\\
+        \tiny 'day','week')
+    };
+    
+    \node[entity, text width=4cm, align=center] (report_cache) at (17, -4) {
+        \textbf{\small REPORT\_CACHE}\\[0.3cm]
+        \textbf{PK:} cache\_id\\
+        \tiny VARCHAR(128)\\[0.1cm]
+        report\_type\\
+        \tiny VARCHAR(100)\\[0.1cm]
+        report\_parameters\\
+        \tiny JSON\\[0.1cm]
+        cached\_result\\
+        \tiny LONGTEXT\\[0.1cm]
+        created\_at\\
+        \tiny TIMESTAMP\\[0.1cm]
+        expires\_at\\
+        \tiny TIMESTAMP\\[0.1cm]
+        access\_count\\
+        \tiny INT(11) DEFAULT 0
+    };
+    
+    \node[entity, text width=4cm, align=center] (config) at (25, 11) {
+        \textbf{\scriptsize SYSTEM\_CONFIGURATION}\\[0.3cm]
+        \textbf{PK:} config\_id\\
+        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
+        config\_key\\
+        \tiny VARCHAR(100) UNIQUE\\[0.1cm]
+        config\_value\\
+        \tiny TEXT\\[0.1cm]
+        config\_type\\
+        \tiny ENUM('string','integer',\\
+        \tiny 'boolean','json')\\[0.1cm]
+        description\\
+        \tiny TEXT\\[0.1cm]
+        is\_active\\
+        \tiny BOOLEAN\\[0.1cm]
+        last\_modified\\
+        \tiny TIMESTAMP
+    };
+    
+    % RELATIONSHIPS
+    \node[relationship] (user_session_rel) at (-15, 11) {\small HAS};
+    \node[relationship] (category_self_rel) at (-7, 11) {\small PARENT\_OF};
+    \node[relationship] (question_category_rel) at (-3, 16) {\small BELONGS\_TO};
+    \node[relationship] (question_user_rel) at (-7, 11) {\small CREATED\_BY};
+    \node[relationship] (trust_question_rel) at (-1, 11) {\small EVALUATES};
+    \node[relationship] (exam_user_rel) at (-3, 11) {\small CREATED\_BY};
+    \node[relationship] (response_exam_rel) at (9, 11) {\small SUBMITTED\_FOR};
+    \node[relationship] (response_user_rel) at (-3, 1) {\small ANSWERED\_BY};
+    \node[relationship] (response_question_rel) at (5, 11) {\small ANSWERS};
+    \node[relationship] (sync_user_rel) at (1, 16) {\small SYNCS\_FOR};
+    
+    % RELATIONSHIP CONNECTIONS
+    \draw[flow] (users) -- (user_session_rel);
+    \draw[flow] (user_session_rel) -- (sessions);
+    
+    \draw[flow] (categories) to[bend left=20] (category_self_rel);
+    \draw[flow] (category_self_rel) to[bend left=20] (categories);
+    
+    \draw[flow] (categories) -- (question_category_rel);
+    \draw[flow] (question_category_rel) -- (questions);
+    
+    \draw[flow] (users) to[bend right=20] (question_user_rel);
+    \draw[flow] (question_user_rel) -- (questions);
+    
+    \draw[flow] (questions) -- (trust_question_rel);
+    \draw[flow] (trust_question_rel) -- (trust_scores);
+    
+    \draw[flow] (users) to[bend right=40] (exam_user_rel);
+    \draw[flow] (exam_user_rel) to[bend right=20] (exams);
+    
+    \draw[flow] (exams) -- (response_exam_rel);
+    \draw[flow] (response_exam_rel) -- (responses);
+    
+    \draw[flow] (users) to[bend left=60] (response_user_rel);
+    \draw[flow] (response_user_rel) to[bend left=40] (responses);
+    
+    \draw[flow] (questions) to[bend right=20] (response_question_rel);
+    \draw[flow] (response_question_rel) to[bend right=20] (responses);
+    
+    \draw[flow] (users) to[bend left=40] (sync_user_rel);
+    \draw[flow] (sync_user_rel) to[bend left=40] (offline_sync);
+    
+    % DOMAIN LABELS
+    \node[above=0.8cm] at (-11, 20) {\textbf{\Large\color{blue}USER MANAGEMENT}};
+    \node[above=0.8cm] at (-3, 20) {\textbf{\Large\color{green}CONTENT MANAGEMENT}};
+    \node[above=0.8cm] at (9, 20) {\textbf{\Large\color{red}ASSESSMENT DOMAIN}};
+    \node[above=0.8cm] at (21, 20) {\textbf{\Large\color{orange}ANALYTICS \& CACHING}};
+    
+    \end{tikzpicture}
+    }
+    \caption{Comprehensive Entity Relationship (ER) Diagram with Data Types and Sizes}
+\end{figure}
+
+\newpage
+\subsection{Data Types and Size Specifications According to ER Diagram}
+
+The following detailed specifications define the exact data types, sizes, and constraints for each field in the database schema, ensuring optimal performance and data integrity.
+
+\subsubsection{User Management Domain Tables}
+
+\textbf{Users Table:}
+\begin{table}[H]
+\centering
+\caption{Users Table Data Specifications}
+\footnotesize
+\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
+\hline
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
+\hline
+user\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL, Unique identifier for users \\
+\hline
+username & VARCHAR(50) & INDEX & NOT NULL, UNIQUE, Alphanumeric username (3-50 chars) \\
+\hline
+email & VARCHAR(100) & UNIQUE INDEX & NOT NULL, UNIQUE, Valid email format validation \\
+\hline
+password\_hash & VARCHAR(255) & - & NOT NULL, Bcrypt hashed password (minimum 8 chars) \\
+\hline
+role\_type & ENUM & INDEX & ('student','teacher','admin','content\_creator') \\
+\hline
+first\_name & VARCHAR(50) & - & NOT NULL, User's first name \\
+\hline
+last\_name & VARCHAR(50) & - & NOT NULL, User's last name \\
+\hline
+phone\_number & VARCHAR(15) & INDEX & NULL, International format validation \\
+\hline
+created\_at & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
+\hline
+last\_login & TIMESTAMP & INDEX & NULL, Tracks user activity \\
+\hline
+is\_active & BOOLEAN & INDEX & DEFAULT TRUE, Account status flag \\
+\hline
+profile\_picture & VARCHAR(500) & - & NULL, URL to profile image \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{User\_Sessions Table:}
+\begin{table}[H]
+\centering
+\caption{User Sessions Table Data Specifications}
+\footnotesize
+\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
+\hline
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
+\hline
+session\_id & VARCHAR(128) & PRIMARY KEY & NOT NULL, Unique session identifier \\
+\hline
+user\_id & INT(11) & FOREIGN KEY & REFERENCES Users(user\_id), CASCADE DELETE \\
+\hline
+session\_token & VARCHAR(255) & UNIQUE INDEX & NOT NULL, JWT or similar token \\
+\hline
+created\_at & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
+\hline
+expires\_at & TIMESTAMP & INDEX & NOT NULL, Session expiration time \\
+\hline
+is\_active & BOOLEAN & INDEX & DEFAULT TRUE \\
+\hline
+device\_info & JSON & - & NULL, Device and browser information \\
+\hline
+ip\_address & VARCHAR(45) & INDEX & NULL, Supports IPv4 and IPv6 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Content Management Domain Tables}
+
+\textbf{Content\_Categories Table:}
+\begin{table}[H]
+\centering
+\caption{Content Categories Table Data Specifications}
+\footnotesize
+\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
+\hline
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
+\hline
+category\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
+\hline
+category\_name & VARCHAR(100) & INDEX & NOT NULL, Subject or topic name \\
+\hline
+parent\_category\_id & INT(11) & FOREIGN KEY & NULL, REFERENCES Content\_Categories(category\_id) \\
+\hline
+description & TEXT & - & NULL, Detailed category description \\
+\hline
+difficulty\_level & ENUM & INDEX & ('beginner','intermediate','advanced') \\
+\hline
+display\_order & INT(11) & INDEX & DEFAULT 0, For UI ordering \\
+\hline
+is\_active & BOOLEAN & INDEX & DEFAULT TRUE \\
+\hline
+created\_at & TIMESTAMP & - & DEFAULT CURRENT\_TIMESTAMP \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Questions Table:}
+\begin{table}[H]
+\centering
+\caption{Questions Table Data Specifications}
+\footnotesize
+\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
+\hline
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
+\hline
+question\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
+\hline
+category\_id & INT(11) & FOREIGN KEY & REFERENCES Content\_Categories(category\_id) \\
+\hline
+created\_by\_user\_id & INT(11) & FOREIGN KEY & REFERENCES Users(user\_id) \\
+\hline
+question\_text & LONGTEXT & FULLTEXT INDEX & NOT NULL, Question content with rich text \\
+\hline
+question\_type & ENUM & INDEX & ('mcq','subjective','true\_false','fill\_blank') \\
+\hline
+correct\_answer & TEXT & - & NOT NULL, Expected answer or answer key \\
+\hline
+answer\_options & JSON & - & NULL, For MCQ options and metadata \\
+\hline
+difficulty\_score & DECIMAL(3,2) & INDEX & DEFAULT 0.5, Range 0.0-1.0 \\
+\hline
+max\_score & DECIMAL(5,2) & - & DEFAULT 1.0, Maximum possible points \\
+\hline
+estimated\_time\_minutes & INT(11) & - & DEFAULT 2, Expected completion time \\
+\hline
+created\_at & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
+\hline
+last\_modified & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP ON UPDATE \\
+\hline
+is\_published & BOOLEAN & INDEX & DEFAULT FALSE \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Question\_Trust\_Scores Table:}
+\begin{table}[H]
+\centering
+\caption{Question Trust Scores Table Data Specifications}
+\footnotesize
+\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
+\hline
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
+\hline
+trust\_score\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
+\hline
+question\_id & INT(11) & FOREIGN KEY & UNIQUE, REFERENCES Questions(question\_id) \\
+\hline
+trust\_score & DECIMAL(4,3) & INDEX & DEFAULT 0.500, Range 0.000-1.000 \\
+\hline
+user\_reports\_count & INT(11) & INDEX & DEFAULT 0, Number of user reports \\
+\hline
+positive\_feedback\_count & INT(11) & - & DEFAULT 0 \\
+\hline
+negative\_feedback\_count & INT(11) & - & DEFAULT 0 \\
+\hline
+ai\_confidence\_score & DECIMAL(4,3) & INDEX & DEFAULT 0.500, AI assessment confidence \\
+\hline
+expert\_validated & BOOLEAN & INDEX & DEFAULT FALSE \\
+\hline
+last\_updated & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP ON UPDATE \\
+\hline
+quality\_metrics & JSON & - & NULL, Additional AI-generated metrics \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Assessment Domain Tables}
+
+\textbf{Exams Table:}
+\begin{table}[H]
+\centering
+\caption{Exams Table Data Specifications}
+\footnotesize
+\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
+\hline
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
+\hline
+exam\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
+\hline
+created\_by\_user\_id & INT(11) & FOREIGN KEY & REFERENCES Users(user\_id) \\
+\hline
+exam\_title & VARCHAR(200) & INDEX & NOT NULL, Exam name/title \\
+\hline
+description & TEXT & - & NULL, Detailed exam description \\
+\hline
+instructions & TEXT & - & NULL, Student instructions \\
+\hline
+start\_time & TIMESTAMP & INDEX & NULL, Scheduled start time \\
+\hline
+end\_time & TIMESTAMP & INDEX & NULL, Scheduled end time \\
+\hline
+duration\_minutes & INT(11) & - & DEFAULT 60, Exam duration \\
+\hline
+max\_attempts & INT(11) & - & DEFAULT 1, Allowed attempts per user \\
+\hline
+passing\_score & DECIMAL(5,2) & - & DEFAULT 60.00, Minimum score to pass \\
+\hline
+total\_questions & INT(11) & - & DEFAULT 0, Number of questions \\
+\hline
+randomize\_questions & BOOLEAN & - & DEFAULT FALSE \\
+\hline
+is\_published & BOOLEAN & INDEX & DEFAULT FALSE \\
+\hline
+created\_at & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Exam\_Responses Table:}
+\begin{table}[H]
+\centering
+\caption{Exam Responses Table Data Specifications}
+\footnotesize
+\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
+\hline
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
+\hline
+response\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
+\hline
+exam\_id & INT(11) & FOREIGN KEY & REFERENCES Exams(exam\_id) \\
+\hline
+user\_id & INT(11) & FOREIGN KEY & REFERENCES Users(user\_id) \\
+\hline
+question\_id & INT(11) & FOREIGN KEY & REFERENCES Questions(question\_id) \\
+\hline
+student\_answer & LONGTEXT & FULLTEXT INDEX & NULL, Student's response \\
+\hline
+ai\_score & DECIMAL(5,2) & INDEX & NULL, AI-generated score \\
+\hline
+human\_score & DECIMAL(5,2) & INDEX & NULL, Human evaluator score \\
+\hline
+final\_score & DECIMAL(5,2) & INDEX & NULL, Final assigned score \\
+\hline
+ai\_confidence & DECIMAL(4,3) & INDEX & NULL, AI confidence level \\
+\hline
+needs\_human\_review & BOOLEAN & INDEX & DEFAULT FALSE \\
+\hline
+reviewed\_by\_user\_id & INT(11) & FOREIGN KEY & NULL, REFERENCES Users(user\_id) \\
+\hline
+submitted\_at & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
+\hline
+reviewed\_at & TIMESTAMP & INDEX & NULL \\
+\hline
+time\_spent\_seconds & INT(11) & - & NULL, Time spent on question \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{AI\_Evaluation\_Models Table:}
+\begin{table}[H]
+\centering
+\caption{AI Evaluation Models Table Data Specifications}
+\footnotesize
+\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
+\hline
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
+\hline
+model\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
+\hline
+model\_name & VARCHAR(100) & INDEX & NOT NULL, Descriptive model name \\
+\hline
+model\_version & VARCHAR(50) & INDEX & NOT NULL, Version identifier \\
+\hline
+model\_type & ENUM & INDEX & ('nlp\_evaluator','trust\_scorer','content\_analyzer') \\
+\hline
+model\_path & VARCHAR(500) & - & NOT NULL, File system or cloud path \\
+\hline
+accuracy\_score & DECIMAL(5,4) & INDEX & NULL, Model accuracy (0.0000-1.0000) \\
+\hline
+training\_data\_size & INT(11) & - & NULL, Number of training samples \\
+\hline
+training\_completion\_date & TIMESTAMP & - & NULL \\
+\hline
+is\_active & BOOLEAN & INDEX & DEFAULT FALSE \\
+\hline
+created\_at & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
+\hline
+model\_parameters & JSON & - & NULL, Hyperparameters and config \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Analytics \& Caching Domain Tables}
+
+\textbf{Offline\_Sync\_Data Table:}
+\begin{table}[H]
+\centering
+\caption{Offline Sync Data Table Data Specifications}
+\footnotesize
+\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
+\hline
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
+\hline
+sync\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
+\hline
+user\_id & INT(11) & FOREIGN KEY & REFERENCES Users(user\_id) \\
+\hline
+content\_type & ENUM & INDEX & ('exam','question','material','progress') \\
+\hline
+content\_id & INT(11) & INDEX & NOT NULL, ID of the content being synced \\
+\hline
+cached\_data & LONGTEXT & - & NULL, Compressed JSON data \\
+\hline
+data\_size\_bytes & INT(11) & - & NULL, Size of cached data \\
+\hline
+last\_sync\_time & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
+\hline
+sync\_status & ENUM & INDEX & ('pending','synced','failed') \\
+\hline
+device\_id & VARCHAR(255) & INDEX & NULL, Unique device identifier \\
+\hline
+sync\_priority & ENUM & INDEX & ('low','medium','high') DEFAULT 'medium' \\
+\hline
+expires\_at & TIMESTAMP & INDEX & NULL, Cache expiration time \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Performance\_Analytics Table:}
+\begin{table}[H]
+\centering
+\caption{Performance Analytics Table Data Specifications}
+\footnotesize
+\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
+\hline
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
+\hline
+metric\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
+\hline
+metric\_type & VARCHAR(50) & INDEX & NOT NULL, Type of metric being recorded \\
+\hline
+metric\_name & VARCHAR(100) & INDEX & NOT NULL, Specific metric identifier \\
+\hline
+metric\_value & DECIMAL(15,6) & INDEX & NOT NULL, Numeric value of the metric \\
+\hline
+metadata & JSON & - & NULL, Additional context and dimensions \\
+\hline
+timestamp & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
+\hline
+source\_component & VARCHAR(100) & INDEX & NULL, System component generating metric \\
+\hline
+aggregation\_period & ENUM & INDEX & ('minute','hour','day','week') \\
+\hline
+tags & JSON & - & NULL, Searchable tags for metric categorization \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Report\_Cache Table:}
+\begin{table}[H]
+\centering
+\caption{Report Cache Table Data Specifications}
+\footnotesize
+\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
+\hline
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
+\hline
+cache\_id & VARCHAR(128) & PRIMARY KEY & NOT NULL, MD5 hash of parameters \\
+\hline
+report\_type & VARCHAR(100) & INDEX & NOT NULL, Type of report cached \\
+\hline
+report\_parameters & JSON & - & NOT NULL, Parameters used to generate report \\
+\hline
+cached\_result & LONGTEXT & - & NOT NULL, Compressed report data \\
+\hline
+result\_size\_bytes & INT(11) & - & NULL, Size of cached result \\
+\hline
+created\_at & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
+\hline
+expires\_at & TIMESTAMP & INDEX & NOT NULL, Cache expiration time \\
+\hline
+access\_count & INT(11) & INDEX & DEFAULT 0, Number of cache hits \\
+\hline
+last\_accessed & TIMESTAMP & INDEX & NULL, Last access timestamp \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{System\_Configuration Table:}
+\begin{table}[H]
+\centering
+\caption{System Configuration Table Data Specifications}
+\footnotesize
+\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
+\hline
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
+\hline
+config\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
+\hline
+config\_key & VARCHAR(100) & UNIQUE INDEX & NOT NULL, Unique configuration identifier \\
+\hline
+config\_value & TEXT & - & NOT NULL, Configuration value \\
+\hline
+config\_type & ENUM & INDEX & ('string','integer','boolean','json') \\
+\hline
+description & TEXT & - & NULL, Human-readable description \\
+\hline
+category & VARCHAR(50) & INDEX & NULL, Configuration category \\
+\hline
+is\_active & BOOLEAN & INDEX & DEFAULT TRUE \\
+\hline
+requires\_restart & BOOLEAN & - & DEFAULT FALSE, System restart requirement \\
+\hline
+last\_modified & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP ON UPDATE \\
+\hline
+modified\_by\_user\_id & INT(11) & FOREIGN KEY & NULL, REFERENCES Users(user\_id) \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Database Performance Optimization Features:}
+
+The database design incorporates several performance optimization strategies:
+
+\begin{enumerate}
+    \item \textbf{Strategic Indexing:} All foreign keys, frequently queried fields, and search columns have appropriate indexes
+    \item \textbf{Partitioning Strategy:} Large tables like Exam\_Responses and Performance\_Analytics use time-based partitioning
+    \item \textbf{Caching Integration:} Report\_Cache and Offline\_Sync\_Data tables support intelligent caching mechanisms
+    \item \textbf{JSON Flexibility:} JSON fields provide schema flexibility for evolving requirements while maintaining performance
+    \item \textbf{Data Type Optimization:} All data types are sized appropriately to minimize storage while accommodating growth
+    \item \textbf{Referential Integrity:} Foreign key constraints ensure data consistency while supporting cascading operations
+\end{enumerate}
+This comprehensive database design provides the robust foundation needed to support Chorcha's enhanced functionality while ensuring scalability, performance, and data integrity across all system components.
+
+\section{Form Design}
+
+The form design for Chorcha's enhanced system prioritizes user experience, accessibility, and efficient data collection while supporting the AI-powered evaluation and offline synchronization capabilities identified in our system analysis.
+
+\subsection{Design Principles}
+
+The form design follows modern UX/UI principles and educational technology best practices:
+
+\begin{enumerate}
+    \item \textbf{Progressive Disclosure:} Complex forms are broken into logical steps to reduce cognitive load
+    \item \textbf{Responsive Design:} All forms adapt seamlessly across desktop, tablet, and mobile devices
+    \item \textbf{Accessibility Compliance:} WCAG 2.1 AA standards ensure inclusive access for all users
+    \item \textbf{Offline Capability:} Forms support offline completion with automatic synchronization when connectivity is restored
+    \item \textbf{Real-time Validation:} Immediate feedback prevents errors and improves completion rates
+    \item \textbf{Contextual Help:} Integrated tooltips and guidance reduce user confusion
+\end{enumerate}
+
+\subsection{Key Form Categories}
+
+\textbf{1. User Registration and Authentication Forms}
+
+The registration and login forms implement a streamlined onboarding process:
+
+\begin{itemize}
+    \item \textbf{Registration Form:} Multi-step process collecting essential information (name, email, role, institution) with email verification
+    \item \textbf{Login Form:} Simplified single-step authentication with "remember me" and password recovery options
+    \item \textbf{Profile Management:} Comprehensive yet intuitive forms for updating personal information, preferences, and security settings
+\end{itemize}
+
+\textbf{2. Content Creation and Management Forms}
+
+For educators and content creators, forms facilitate efficient content development:
+
+\begin{itemize}
+    \item \textbf{Question Creation Form:} Rich text editor with support for multimedia, LaTeX equations, and multiple question types (MCQ, subjective, true/false, fill-in-the-blank)
+    \item \textbf{Exam Builder Form:} Drag-and-drop interface for exam creation with time limits, difficulty settings, and question bank integration
+    \item \textbf{Category Management:} Hierarchical category creation with tagging and metadata support
+\end{itemize}
+
+\textbf{3. Assessment and Evaluation Forms}
+
+The assessment forms leverage AI capabilities while maintaining user control:
+
+\begin{itemize}
+    \item \textbf{Exam Taking Interface:} Clean, distraction-free design with progress indicators, time management, and auto-save functionality
+    \item \textbf{Manual Evaluation Form:} Structured rubric-based evaluation with AI assistance suggestions and override capabilities
+    \item \textbf{Feedback Forms:} Comprehensive feedback collection with rating systems and qualitative input options
+\end{itemize}
+
+\textbf{4. Analytics and Reporting Forms}
+
+Data-driven forms support informed decision-making:
+
+\begin{itemize}
+    \item \textbf{Report Generation Form:} Customizable report parameters with real-time preview and export options
+    \item \textbf{Analytics Dashboard Configuration:} Personalized dashboard setup with widget selection and layout customization
+    \item \textbf{Performance Tracking Forms:} Progress monitoring with goal setting and achievement tracking
+\end{itemize}
+
+\subsection{Technical Implementation}
+
+\textbf{Frontend Framework:} Modern JavaScript frameworks (React/Vue.js) with component-based architecture ensure consistency and maintainability.
+
+\textbf{Form Validation:} Multi-layer validation approach:
+\begin{itemize}
+    \item \textbf{Client-side:} Real-time validation using JavaScript for immediate feedback
+    \item \textbf{Server-side:} Comprehensive validation ensuring data integrity and security
+    \item \textbf{Database-level:} Constraint enforcement as the final validation layer
+\end{itemize}
+
+\textbf{Offline Support:} Service workers and local storage enable form completion without internet connectivity, with automatic sync upon reconnection.
+
+\textbf{Security Measures:} CSRF protection, input sanitization, and encrypted data transmission ensure secure form processing.
+
+\subsection{User Experience Enhancements}
+
+\textbf{Smart Form Features:}
+\begin{itemize}
+    \item \textbf{Auto-complete:} Intelligent suggestions based on user history and common inputs
+    \item \textbf{Dynamic Fields:} Conditional field display based on user selections
+    \item \textbf{Progress Indicators:} Clear visual feedback on form completion status
+    \item \textbf{Save Draft:} Automatic saving of form progress to prevent data loss
+\end{itemize}
+
+\textbf{Accessibility Features:}
+\begin{itemize}
+    \item \textbf{Keyboard Navigation:} Full keyboard accessibility with logical tab order
+    \item \textbf{Screen Reader Support:} Proper ARIA labels and descriptions
+    \item \textbf{High Contrast Mode:} Visual accessibility options for users with visual impairments
+    \item \textbf{Font Size Adjustment:} Customizable text size for improved readability
+\end{itemize}
+
+\section{Conclusion}
+
+This comprehensive system design successfully addresses the critical challenges identified in Chorcha's current educational platform while establishing a robust foundation for future growth and scalability. The proposed solution integrates advanced AI capabilities, enhanced user experience design, and optimized system architecture to create a transformative educational technology platform.
+
+\subsection{Key Achievements}
+
+\textbf{Problem Resolution:} The design successfully addresses all five critical problems identified in Chapter 1:
+
+\begin{enumerate}
+    \item \textbf{Scalability Crisis Resolved:} AI-powered evaluation handles 80\% of assessment tasks automatically, reducing manual workload and supporting unlimited concurrent users
+    \item \textbf{Performance Optimization:} Load balancing, intelligent caching, and database optimization ensure 95\% uptime during peak periods with 80\% faster query responses
+    \item \textbf{Real-time Capabilities:} Instant report generation, live analytics dashboards, and immediate feedback replace delayed manual processes
+    \item \textbf{Enhanced Accessibility:} Offline functionality ensures equitable access regardless of connectivity, supporting Bangladesh's diverse technological landscape
+    \item \textbf{System Reliability:} Optimized data architecture eliminates timeout errors and lock contention issues through strategic database design
+\end{enumerate}
+
+\textbf{Technical Innovation:} The system incorporates cutting-edge technologies including natural language processing for assessment evaluation, machine learning for adaptive questioning, and progressive web application architecture for seamless offline experiences.
+
+\textbf{User-Centric Design:} Comprehensive form design and user interface improvements prioritize accessibility, usability, and engagement across all user roles (students, teachers, administrators, content creators).
+
+\subsection{Implementation Impact}
+
+\textbf{Educational Transformation:} The enhanced system positions Chorcha as a leader in educational technology, supporting personalized learning experiences and data-driven educational insights.
+
+\textbf{Operational Efficiency:} Automated evaluation processes and intelligent system management reduce administrative overhead while improving assessment quality and consistency.
+
+\textbf{Scalability Foundation:} The modular architecture and cloud-ready design ensure the platform can grow from thousands to millions of users without compromising performance or user experience.
+
+\textbf{Data-Driven Insights:} Advanced analytics capabilities provide educators and administrators with actionable insights for improving educational outcomes and system optimization.
+
+\subsection{Future Readiness}
+
+The designed system architecture provides a solid foundation for future enhancements:
+
+\begin{itemize}
+    \item \textbf{AI Evolution:} Modular AI components can be upgraded as natural language processing and machine learning technologies advance
+    \item \textbf{Integration Capability:} RESTful APIs and microservices architecture enable seamless integration with external educational tools and platforms
+    \item \textbf{Emerging Technologies:} The flexible architecture can accommodate future technologies such as virtual reality, blockchain credentialing, and advanced analytics
+    \item \textbf{Global Expansion:} Multi-language support and cultural adaptability features enable international deployment
+\end{itemize}
+
+\subsection{Success Metrics}
+
+The implementation success will be measured through:
+
+\begin{itemize}
+    \item \textbf{Performance Metrics:} 95\% system uptime, sub-2-second response times, and zero timeout errors
+    \item \textbf{User Engagement:} Increased platform usage, improved completion rates, and positive user satisfaction scores
+    \item \textbf{Educational Outcomes:} Enhanced learning analytics, improved assessment quality, and measurable educational impact
+    \item \textbf{Operational Efficiency:} Reduced manual evaluation time, automated report generation, and streamlined administrative processes
+\end{itemize}
+
+\subsection{Final Recommendation}
+
+Based on the comprehensive analysis, design, and feasibility assessment presented throughout this document, we strongly recommend the immediate implementation of the proposed enhanced system design. The solution addresses critical operational challenges while positioning Chorcha for sustainable growth and educational innovation.
+
+The phased implementation approach ensures minimal disruption to current operations while delivering immediate benefits to users. The robust technical architecture, user-centric design, and comprehensive feature set create a competitive advantage in the rapidly evolving educational technology landscape.
+
+This system design represents not just a solution to current problems, but a strategic investment in Chorcha's future as a leading educational technology platform serving students, educators, and institutions across Bangladesh and beyond.
 
 \end{document}
