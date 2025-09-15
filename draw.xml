@@ -1,0 +1,89 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0" version="24.0.0" modified="2025-08-01T12:00:00.000Z">
+  <diagram id="dfd-page" name="DFD – Chorcha Context">
+    <mxGraphModel dx="1242" dy="714" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- Central process --------------------------------------------------->
+        <mxCell id="central" value="Chorcha&#xa;EdTech&#xa;Platform" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=#1E88E5;strokeWidth=2;fillColor=#E3F2FD;fontStyle=1;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="485" y="285" width="200" height="200" as="geometry"/>
+        </mxCell>
+        
+        <!-- External entities -------------------------------------------------->
+        <mxCell id="students" value="Students" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#2E7D32;fillColor=#E8F5E9;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="110" width="140" height="50" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="teachers" value="Teachers/&#xa;Moderators" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#2E7D32;fillColor=#E8F5E9;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="505" width="140" height="60" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="creators" value="Content&#xa;Creators" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#2E7D32;fillColor=#E8F5E9;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="930" y="505" width="140" height="60" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="admins" value="System&#xa;Admins" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#2E7D32;fillColor=#E8F5E9;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="930" y="110" width="140" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- Data flows – Students ---------------------------------------------->
+        <mxCell id="s1" value="Reg. Data" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="students" target="central">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2" value="Responses" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="students" target="central">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3" value="Results" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="central" target="students">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="s4" value="Materials" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="central" target="students">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Data flows – Teachers / Moderators -------------------------------->
+        <mxCell id="t1" value="Tasks" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="teachers" target="central">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="t2" value="Reports" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="teachers" target="central">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="t3" value="Progress" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="central" target="teachers">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="t4" value="Grades" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="central" target="teachers">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Data flows – Content Creators ------------------------------------->
+        <mxCell id="c1" value="Q. Banks" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="creators" target="central">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2" value="Content" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="creators" target="central">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3" value="Analytics" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="central" target="creators">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4" value="Metrics" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="central" target="creators">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Data flows – System Admins ---------------------------------------->
+        <mxCell id="a1" value="Configs" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="admins" target="central">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a2" value="Reports" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="admins" target="central">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a3" value="Perf. Data" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="central" target="admins">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="a4" value="User Mgmt" style="endArrow=block;strokeColor=#9C27B0;fontColor=#000000" edge="1" parent="1" source="central" target="admins">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
