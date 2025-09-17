@@ -27,6 +27,7 @@
 \usepackage{color}
 \usepackage{xcolor}
 \usepackage{tikz}
+\usetikzlibrary{shapes.geometric}
 \usepackage{pgfplots}
 \usepackage{pgfplotstable}
 \usepackage{pdflscape}
@@ -2679,328 +2680,459 @@ System\_Configuration & Analytics \& Caching & Manage platform settings and para
 \end{tabular}
 \end{table}
 
-\subsection{Entity Relationship (ER) Diagram}
+\subsection{Entity Relationship (ER) Diagrams}
 
-The comprehensive ER diagram illustrates the relationships between all database entities, including primary keys, foreign keys, and data types with their respective sizes. The diagram uses color coding to distinguish between different domains and highlights the AI-enhanced components.
+The database design has been divided into multiple focused ER diagrams to better illustrate the relationships between entities in different functional domains. Each diagram clearly shows the cardinality of relationships using standard ER notation:
+
+\begin{itemize}
+    \item \textbf{1:1} - One-to-One relationship
+    \item \textbf{1:M} - One-to-Many relationship  
+    \item \textbf{M:1} - Many-to-One relationship
+    \item \textbf{M:M} - Many-to-Many relationship
+\end{itemize}
+
+\subsubsection{User Management Domain ER Diagram}
+
+This diagram shows the core user management entities and their relationships, focusing on user authentication, sessions, and role management.
 
 \begin{figure}[H]
     \centering
-    \resizebox{\textwidth}{!}{%
-    \begin{tikzpicture}[
-        node distance=7cm,
-        entity/.style={rectangle, draw=blue, very thick, minimum width=4.5cm, minimum height=6cm, fill=lightblue, text=black},
-        relationship/.style={rectangle, rounded corners=8pt, draw=red, very thick, minimum width=3cm, minimum height=1.5cm, fill=pink, text=black},
-        attribute/.style={ellipse, draw=green, thick, minimum width=2cm, minimum height=1.2cm, fill=lightgreen, text=black},
-        pk/.style={ellipse, draw=red, very thick, minimum width=2cm, minimum height=1.2cm, fill=yellow, text=black},
-        fk/.style={ellipse, draw=orange, thick, minimum width=2cm, minimum height=1.2cm, fill=lightorange, text=black},
-        flow/.style={-, very thick}
-    ]
-    
-    % USER MANAGEMENT DOMAIN
-    \node[entity, text width=4cm, align=center] (users) at (-15, 16) {
-        \textbf{USERS}\\[0.3cm]
-        \textbf{PK:} user\_id\\
-        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
-        username\\
-        \tiny VARCHAR(50) NOT NULL\\[0.1cm]
-        email\\
-        \tiny VARCHAR(100) UNIQUE\\[0.1cm]
-        password\_hash\\
-        \tiny VARCHAR(255)\\[0.1cm]
-        role\_type\\
-        \tiny ENUM('student','teacher',\\
-        \tiny 'admin','content\_creator')\\[0.1cm]
-        created\_at\\
-        \tiny TIMESTAMP\\[0.1cm]
-        last\_login\\
-        \tiny TIMESTAMP\\[0.1cm]
-        is\_active\\
-        \tiny BOOLEAN DEFAULT TRUE
-    };
-    
-    \node[entity, text width=4cm, align=center] (sessions) at (-15, 6) {
-        \textbf{\small USER\_SESSIONS}\\[0.3cm]
-        \textbf{PK:} session\_id\\
-        \tiny VARCHAR(128)\\[0.1cm]
-        \textbf{FK:} user\_id\\
-        \tiny INT(11)\\[0.1cm]
-        session\_token\\
-        \tiny VARCHAR(255)\\[0.1cm]
-        created\_at\\
-        \tiny TIMESTAMP\\[0.1cm]
-        expires\_at\\
-        \tiny TIMESTAMP\\[0.1cm]
-        is\_active\\
-        \tiny BOOLEAN\\[0.1cm]
-        device\_info\\
-        \tiny JSON
-    };
-    
-    % CONTENT MANAGEMENT DOMAIN
-    \node[entity, text width=4cm, align=center] (categories) at (-7, 16) {
-        \textbf{\small CONTENT\_CATEGORIES}\\[0.3cm]
-        \textbf{PK:} category\_id\\
-        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
-        category\_name\\
-        \tiny VARCHAR(100)\\[0.1cm]
-        parent\_category\_id\\
-        \tiny INT(11) NULL\\[0.1cm]
-        description\\
-        \tiny TEXT\\[0.1cm]
-        difficulty\_level\\
-        \tiny ENUM('beginner',\\
-        \tiny 'intermediate','advanced')\\[0.1cm]
-        is\_active\\
-        \tiny BOOLEAN
-    };
-    
-    \node[entity, text width=4cm, align=center] (questions) at (1, 16) {
-        \textbf{QUESTIONS}\\[0.3cm]
-        \textbf{PK:} question\_id\\
-        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
-        \textbf{FK:} category\_id\\
-        \tiny INT(11)\\[0.1cm]
-        \textbf{FK:} created\_by\_user\_id\\
-        \tiny INT(11)\\[0.1cm]
-        question\_text\\
-        \tiny LONGTEXT\\[0.1cm]
-        question\_type\\
-        \tiny ENUM('mcq','subjective',\\
-        \tiny 'true\_false','fill\_blank')\\[0.1cm]
-        correct\_answer\\
-        \tiny TEXT\\[0.1cm]
-        answer\_options\\
-        \tiny JSON\\[0.1cm]
-        difficulty\_score\\
-        \tiny DECIMAL(3,2)\\[0.1cm]
-        created\_at\\
-        \tiny TIMESTAMP
-    };
-    
-    \node[entity, text width=4cm, align=center] (trust_scores) at (-3, 6) {
-        \textbf{\scriptsize QUESTION\_TRUST\_SCORES}\\[0.3cm]
-        \textbf{PK:} trust\_score\_id\\
-        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
-        \textbf{FK:} question\_id\\
-        \tiny INT(11) UNIQUE\\[0.1cm]
-        trust\_score\\
-        \tiny DECIMAL(4,3)\\[0.1cm]
-        user\_reports\_count\\
-        \tiny INT(11) DEFAULT 0\\[0.1cm]
-        ai\_confidence\_score\\
-        \tiny DECIMAL(4,3)\\[0.1cm]
-        expert\_validated\\
-        \tiny BOOLEAN DEFAULT FALSE\\[0.1cm]
-        last\_updated\\
-        \tiny TIMESTAMP\\[0.1cm]
-        quality\_metrics\\
-        \tiny JSON
-    };
-    
-    % ASSESSMENT DOMAIN
-    \node[entity, text width=4cm, align=center] (exams) at (9, 16) {
-        \textbf{EXAMS}\\[0.3cm]
-        \textbf{PK:} exam\_id\\
-        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
-        \textbf{FK:} created\_by\_user\_id\\
-        \tiny INT(11)\\[0.1cm]
-        exam\_title\\
-        \tiny VARCHAR(200)\\[0.1cm]
-        description\\
-        \tiny TEXT\\[0.1cm]
-        start\_time\\
-        \tiny TIMESTAMP\\[0.1cm]
-        end\_time\\
-        \tiny TIMESTAMP\\[0.1cm]
-        duration\_minutes\\
-        \tiny INT(11)\\[0.1cm]
-        max\_attempts\\
-        \tiny INT(11) DEFAULT 1\\[0.1cm]
-        passing\_score\\
-        \tiny DECIMAL(5,2)\\[0.1cm]
-        is\_published\\
-        \tiny BOOLEAN
-    };
-    
-    \node[entity, text width=4cm, align=center] (responses) at (9, 6) {
-        \textbf{\small EXAM\_RESPONSES}\\[0.3cm]
-        \textbf{PK:} response\_id\\
-        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
-        \textbf{FK:} exam\_id\\
-        \tiny INT(11)\\[0.1cm]
-        \textbf{FK:} user\_id\\
-        \tiny INT(11)\\[0.1cm]
-        \textbf{FK:} question\_id\\
-        \tiny INT(11)\\[0.1cm]
-        student\_answer\\
-        \tiny LONGTEXT\\[0.1cm]
-        ai\_score\\
-        \tiny DECIMAL(5,2)\\[0.1cm]
-        human\_score\\
-        \tiny DECIMAL(5,2) NULL\\[0.1cm]
-        ai\_confidence\\
-        \tiny DECIMAL(4,3)\\[0.1cm]
-        needs\_human\_review\\
-        \tiny BOOLEAN\\[0.1cm]
-        submitted\_at\\
-        \tiny TIMESTAMP
-    };
-    
-    \node[entity, text width=4cm, align=center] (ai_models) at (5, -4) {
-        \textbf{\scriptsize AI\_EVALUATION\_MODELS}\\[0.3cm]
-        \textbf{PK:} model\_id\\
-        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
-        model\_name\\
-        \tiny VARCHAR(100)\\[0.1cm]
-        model\_version\\
-        \tiny VARCHAR(50)\\[0.1cm]
-        model\_type\\
-        \tiny ENUM('nlp\_evaluator',\\
-        \tiny 'trust\_scorer','content\_analyzer')\\[0.1cm]
-        model\_path\\
-        \tiny VARCHAR(500)\\[0.1cm]
-        accuracy\_score\\
-        \tiny DECIMAL(5,4)\\[0.1cm]
-        training\_data\_size\\
-        \tiny INT(11)\\[0.1cm]
-        is\_active\\
-        \tiny BOOLEAN\\[0.1cm]
-        created\_at\\
-        \tiny TIMESTAMP
-    };
-    
-    % ANALYTICS & CACHING DOMAIN
-    \node[entity, text width=4cm, align=center] (offline_sync) at (17, 16) {
-        \textbf{\scriptsize OFFLINE\_SYNC\_DATA}\\[0.3cm]
-        \textbf{PK:} sync\_id\\
-        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
-        \textbf{FK:} user\_id\\
-        \tiny INT(11)\\[0.1cm]
-        content\_type\\
-        \tiny ENUM('exam','question',\\
-        \tiny 'material','progress')\\[0.1cm]
-        content\_id\\
-        \tiny INT(11)\\[0.1cm]
-        cached\_data\\
-        \tiny LONGTEXT\\[0.1cm]
-        last\_sync\_time\\
-        \tiny TIMESTAMP\\[0.1cm]
-        sync\_status\\
-        \tiny ENUM('pending','synced',\\
-        \tiny 'failed')\\[0.1cm]
-        device\_id\\
-        \tiny VARCHAR(255)
-    };
-    
-    \node[entity, text width=4cm, align=center] (analytics) at (17, 6) {
-        \textbf{\scriptsize PERFORMANCE\_ANALYTICS}\\[0.3cm]
-        \textbf{PK:} metric\_id\\
-        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
-        metric\_type\\
-        \tiny VARCHAR(50)\\[0.1cm]
-        metric\_value\\
-        \tiny DECIMAL(15,6)\\[0.1cm]
-        metadata\\
-        \tiny JSON\\[0.1cm]
-        timestamp\\
-        \tiny TIMESTAMP\\[0.1cm]
-        source\_component\\
-        \tiny VARCHAR(100)\\[0.1cm]
-        aggregation\_period\\
-        \tiny ENUM('minute','hour',\\
-        \tiny 'day','week')
-    };
-    
-    \node[entity, text width=4cm, align=center] (report_cache) at (17, -4) {
-        \textbf{\small REPORT\_CACHE}\\[0.3cm]
-        \textbf{PK:} cache\_id\\
-        \tiny VARCHAR(128)\\[0.1cm]
-        report\_type\\
-        \tiny VARCHAR(100)\\[0.1cm]
-        report\_parameters\\
-        \tiny JSON\\[0.1cm]
-        cached\_result\\
-        \tiny LONGTEXT\\[0.1cm]
-        created\_at\\
-        \tiny TIMESTAMP\\[0.1cm]
-        expires\_at\\
-        \tiny TIMESTAMP\\[0.1cm]
-        access\_count\\
-        \tiny INT(11) DEFAULT 0
-    };
-    
-    \node[entity, text width=4cm, align=center] (config) at (25, 11) {
-        \textbf{\scriptsize SYSTEM\_CONFIGURATION}\\[0.3cm]
-        \textbf{PK:} config\_id\\
-        \tiny INT(11) AUTO\_INCREMENT\\[0.1cm]
-        config\_key\\
-        \tiny VARCHAR(100) UNIQUE\\[0.1cm]
-        config\_value\\
-        \tiny TEXT\\[0.1cm]
-        config\_type\\
-        \tiny ENUM('string','integer',\\
-        \tiny 'boolean','json')\\[0.1cm]
-        description\\
-        \tiny TEXT\\[0.1cm]
-        is\_active\\
-        \tiny BOOLEAN\\[0.1cm]
-        last\_modified\\
-        \tiny TIMESTAMP
-    };
-    
-    % RELATIONSHIPS
-    \node[relationship] (user_session_rel) at (-15, 11) {\small HAS};
-    \node[relationship] (category_self_rel) at (-7, 11) {\small PARENT\_OF};
-    \node[relationship] (question_category_rel) at (-3, 16) {\small BELONGS\_TO};
-    \node[relationship] (question_user_rel) at (-7, 11) {\small CREATED\_BY};
-    \node[relationship] (trust_question_rel) at (-1, 11) {\small EVALUATES};
-    \node[relationship] (exam_user_rel) at (-3, 11) {\small CREATED\_BY};
-    \node[relationship] (response_exam_rel) at (9, 11) {\small SUBMITTED\_FOR};
-    \node[relationship] (response_user_rel) at (-3, 1) {\small ANSWERED\_BY};
-    \node[relationship] (response_question_rel) at (5, 11) {\small ANSWERS};
-    \node[relationship] (sync_user_rel) at (1, 16) {\small SYNCS\_FOR};
-    
-    % RELATIONSHIP CONNECTIONS
-    \draw[flow] (users) -- (user_session_rel);
-    \draw[flow] (user_session_rel) -- (sessions);
-    
-    \draw[flow] (categories) to[bend left=20] (category_self_rel);
-    \draw[flow] (category_self_rel) to[bend left=20] (categories);
-    
-    \draw[flow] (categories) -- (question_category_rel);
-    \draw[flow] (question_category_rel) -- (questions);
-    
-    \draw[flow] (users) to[bend right=20] (question_user_rel);
-    \draw[flow] (question_user_rel) -- (questions);
-    
-    \draw[flow] (questions) -- (trust_question_rel);
-    \draw[flow] (trust_question_rel) -- (trust_scores);
-    
-    \draw[flow] (users) to[bend right=40] (exam_user_rel);
-    \draw[flow] (exam_user_rel) to[bend right=20] (exams);
-    
-    \draw[flow] (exams) -- (response_exam_rel);
-    \draw[flow] (response_exam_rel) -- (responses);
-    
-    \draw[flow] (users) to[bend left=60] (response_user_rel);
-    \draw[flow] (response_user_rel) to[bend left=40] (responses);
-    
-    \draw[flow] (questions) to[bend right=20] (response_question_rel);
-    \draw[flow] (response_question_rel) to[bend right=20] (responses);
-    
-    \draw[flow] (users) to[bend left=40] (sync_user_rel);
-    \draw[flow] (sync_user_rel) to[bend left=40] (offline_sync);
-    
-    % DOMAIN LABELS
-    \node[above=0.8cm] at (-11, 20) {\textbf{\Large\color{blue}USER MANAGEMENT}};
-    \node[above=0.8cm] at (-3, 20) {\textbf{\Large\color{green}CONTENT MANAGEMENT}};
-    \node[above=0.8cm] at (9, 20) {\textbf{\Large\color{red}ASSESSMENT DOMAIN}};
-    \node[above=0.8cm] at (21, 20) {\textbf{\Large\color{orange}ANALYTICS \& CACHING}};
-    
-    \end{tikzpicture}
-    }
-    \caption{Comprehensive Entity Relationship (ER) Diagram with Data Types and Sizes}
+    \includegraphics[width=0.9\textwidth]{assets/ER/Figure4.7.png}
+    \caption{User Management Domain ER Diagram}
+    \label{fig:user_er}
 \end{figure}
+
+\textbf{Detailed Relationship Analysis:}
+
+\textbf{1. Users and User Sessions Relationship (1:M - One-to-Many):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} One-to-Many (1:M)
+    \item \textbf{Description:} One user can have multiple active sessions simultaneously across different devices (web browser, mobile app, tablet), but each session belongs to exactly one user.
+    \item \textbf{Cardinality:} A user can have 0 to many sessions (minimum 0 when logged out, maximum typically 5-10 concurrent sessions)
+    \item \textbf{Foreign Key:} User Sessions.user\_id references Users.user\_id
+    \item \textbf{Business Rules:} 
+        \begin{itemize}
+            \item Sessions are automatically created upon successful login
+            \item Sessions expire after a defined timeout period
+            \item Users can have multiple active sessions but system may limit concurrent sessions for security
+            \item When a user is deleted, all associated sessions are automatically terminated (CASCADE DELETE)
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item Student "Ahmed" logs in from his laptop at home - creates Session 1
+            \item Same student logs in from mobile app during commute - creates Session 2
+            \item Both sessions remain active until logout or timeout
+        \end{itemize}
+\end{itemize}
+
+\subsubsection{Content Management Domain ER Diagram}
+
+This diagram illustrates the content organization structure, including categories, questions, and quality assessment mechanisms.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{assets/ER/Figure4.8.png}
+    \caption{Content Management Domain ER Diagram}
+    \label{fig:content_er}
+\end{figure}
+
+\textbf{Detailed Relationship Analysis:}
+
+\textbf{1. Content Categories Self-Referencing Relationship (1:M - One-to-Many):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} One-to-Many Self-Referencing (1:M)
+    \item \textbf{Description:} Categories can have subcategories in a hierarchical tree structure, allowing for organized content taxonomy.
+    \item \textbf{Cardinality:} One parent category can have 0 to many child categories; each category can have at most one parent
+    \item \textbf{Foreign Key:} Content Categories.parent\_category\_id references Content Categories.category\_id
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item Root categories have NULL parent\_category\_id
+            \item Maximum hierarchy depth is typically 4-5 levels to maintain usability
+            \item Deleting a parent category requires handling of child categories (either reassign or cascade)
+            \item Circular references are prevented through application logic
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item "Mathematics" (parent) → "Algebra" (child) → "Linear Equations" (grandchild)
+            \item "Science" (parent) → "Physics" (child) → "Mechanics" (grandchild) → "Newton's Laws" (great-grandchild)
+        \end{itemize}
+\end{itemize}
+
+\textbf{2. Content Categories and Questions Relationship (1:M - One-to-Many):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} One-to-Many (1:M)
+    \item \textbf{Description:} Multiple questions can belong to one category, but each question is assigned to exactly one primary category.
+    \item \textbf{Cardinality:} One category can contain 0 to thousands of questions; each question belongs to exactly one category
+    \item \textbf{Foreign Key:} Questions.category\_id references Content Categories.category\_id
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item Questions must be assigned to a valid, active category
+            \item Questions can be moved between categories through administrative interface
+            \item Category deletion requires questions to be reassigned or archived
+            \item Questions inherit category-level permissions and access controls
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item "Algebra" category contains 250 questions about algebraic equations
+            \item "Calculus" category contains 180 questions about derivatives and integrals
+        \end{itemize}
+\end{itemize}
+
+\textbf{3. Users and Questions Relationship (1:M - One-to-Many):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} One-to-Many (1:M)
+    \item \textbf{Description:} One user (teacher/content creator) can create multiple questions, but each question is created by exactly one user.
+    \item \textbf{Cardinality:} One user can create 0 to thousands of questions; each question has exactly one creator
+    \item \textbf{Foreign Key:} Questions.created\_by\_user\_id references Users.user\_id
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item Only users with "teacher" or "content\_creator" roles can create questions
+            \item Question ownership cannot be transferred once created (audit trail requirement)
+            \item Creator information is preserved even if user account is deactivated
+            \item Creators receive notifications about their questions' performance and feedback
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item Teacher "Dr. Rahman" has created 85 mathematics questions
+            \item Content creator "Ms. Sultana" has contributed 120 English literature questions
+        \end{itemize}
+\end{itemize}
+
+\textbf{4. Questions and Question Trust Scores Relationship (1:1 - One-to-One):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} One-to-One (1:1)
+    \item \textbf{Description:} Each question has exactly one trust score record that tracks its quality and reliability metrics.
+    \item \textbf{Cardinality:} Each question has exactly one trust score; each trust score belongs to exactly one question
+    \item \textbf{Foreign Key:} Question Trust Scores.question\_id references Questions.question\_id (UNIQUE constraint)
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item Trust score record is automatically created when a new question is published
+            \item Trust scores are continuously updated based on user feedback and AI analysis
+            \item Trust score cannot exist without a corresponding question
+            \item Deleting a question automatically removes its trust score record
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item Question ID 1001 "What is 2+2?" has Trust Score ID 1001 with score 0.95 (high trust)
+            \item Question ID 1002 "Complex calculus problem" has Trust Score ID 1002 with score 0.72 (moderate trust)
+        \end{itemize}
+\end{itemize}
+
+\subsubsection{Assessment Domain ER Diagram}
+
+This diagram shows the exam delivery and evaluation system, including AI-powered assessment capabilities.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{assets/ER/Figure4.9.png}
+    \caption{Assessment Domain ER Diagram}
+    \label{fig:assessment_er}
+\end{figure}
+
+\textbf{Detailed Relationship Analysis:}
+
+\textbf{1. Users and Exams Relationship (1:M - One-to-Many):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} One-to-Many (1:M)
+    \item \textbf{Description:} One user with appropriate permissions (teacher, content creator, or administrator) can create multiple exams, but each exam is created by exactly one user.
+    \item \textbf{Cardinality:} A user can create 0 to hundreds of exams; each exam has exactly one creator
+    \item \textbf{Foreign Key:} Exams.created\_by\_user\_id references Users.user\_id
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item Only users with roles "teacher," "content\_creator," or "administrator" can create exams
+            \item Exam ownership cannot be transferred once created (maintains audit trail)
+            \item Creator retains administrative rights over their exams (edit, delete, view statistics)
+            \item System preserves creator information even if user account is deactivated
+            \item Creators receive notifications about exam performance and student feedback
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item Teacher "Dr. Ahmed" has created 15 mathematics exams for different grade levels
+            \item Content creator "Ms. Khan" has developed 8 comprehensive English literature assessments
+            \item Administrator "Mr. Rahman" has set up 3 standardized university entrance practice exams
+        \end{itemize}
+\end{itemize}
+
+\textbf{2. Users and Exam Responses Relationship (1:M - One-to-Many):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} One-to-Many (1:M)
+    \item \textbf{Description:} One user (student) can submit multiple exam responses across different exams and attempts, but each response belongs to exactly one user.
+    \item \textbf{Cardinality:} A student can submit 0 to thousands of responses; each response belongs to exactly one student
+    \item \textbf{Foreign Key:} Exam Responses.student\_user\_id references Users.user\_id
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item Only users with "student" role can submit exam responses
+            \item Students can retake exams if permitted by exam configuration
+            \item Each response attempt is recorded separately for progress tracking
+            \item Response history is preserved for academic integrity and performance analysis
+            \item Students can view their response history and performance trends
+            \item Anonymous responses are not permitted to maintain accountability
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item Student "Fatima" has submitted 127 responses across 45 different exams
+            \item Student "Hassan" has taken the same calculus exam 3 times, generating 3 response records
+            \item Student "Aisha" has completed responses for 89 practice questions in preparation for board exams
+        \end{itemize}
+\end{itemize}
+
+\textbf{3. Exams and Questions Relationship (M:M - Many-to-Many):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} Many-to-Many (M:M)
+    \item \textbf{Description:} One exam can contain multiple questions, and one question can appear in multiple different exams, creating flexible content reuse.
+    \item \textbf{Cardinality:} An exam can contain 1 to 200+ questions; a question can appear in 0 to many exams
+    \item \textbf{Implementation:} Typically implemented through junction table "Exam\_Questions" with additional attributes
+    \item \textbf{Junction Table Attributes:}
+        \begin{itemize}
+            \item exam\_id (Foreign Key to Exams)
+            \item question\_id (Foreign Key to Questions)
+            \item question\_order (ordering within exam)
+            \item points\_value (score weight for this question in this exam)
+            \item is\_mandatory (whether question is required or optional)
+            \item time\_limit (specific time allocation for this question)
+        \end{itemize}
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item Questions can be reused across multiple exams without duplication
+            \item Question order and point values can vary between exams
+            \item Removing a question from the system requires careful handling of existing exams
+            \item Questions maintain their core content while allowing exam-specific configuration
+            \item Exam difficulty is calculated based on included questions and their weights
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item Question "What is Newton's First Law?" appears in 12 different physics exams
+            \item "Algebra Fundamentals" exam contains 25 questions, where 8 questions are also used in "Math Review" exam
+            \item Question about calculus derivatives is used in both "Calculus Midterm" and "Engineering Math Assessment"
+        \end{itemize}
+\end{itemize}
+
+\textbf{4. Questions and Exam Responses Relationship (1:M - One-to-Many):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} One-to-Many (1:M)
+    \item \textbf{Description:} One question can receive multiple student responses from different students and exam attempts, but each response corresponds to exactly one question.
+    \item \textbf{Cardinality:} A question can have 0 to thousands of responses; each response answers exactly one question
+    \item \textbf{Foreign Key:} Exam Responses.question\_id references Questions.question\_id
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item Each response must be linked to a specific question for proper evaluation
+            \item Response format must match question type (multiple choice, essay, calculation)
+            \item System tracks response patterns to analyze question difficulty and effectiveness
+            \item Historical responses inform AI model training for automated evaluation
+            \item Question performance analytics are generated from aggregated response data
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item Question "Solve: 2x + 5 = 13" has received 847 student responses with varying accuracy
+            \item Essay question about climate change has 156 responses that require AI-assisted evaluation
+            \item Multiple choice question about photosynthesis has 1,203 responses with 89\% correct rate
+        \end{itemize}
+\end{itemize}
+
+\textbf{5. Exam Responses and AI Evaluation Models Relationship (M:1 - Many-to-One):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} Many-to-One (M:1)
+    \item \textbf{Description:} Multiple exam responses can be evaluated by the same AI model, but each response is evaluated by exactly one AI model (per evaluation attempt).
+    \item \textbf{Cardinality:} Multiple responses are evaluated by one AI model; each response uses one primary AI model
+    \item \textbf{Foreign Key:} Exam Responses.ai\_model\_id references AI Evaluation Models.model\_id
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item AI model selection is based on question type and subject domain
+            \item Different models may be used for different evaluation attempts of the same response
+            \item Model performance is tracked through response evaluation accuracy
+            \item System can switch to backup models if primary model fails or performs poorly
+            \item Human evaluators can override AI evaluation when necessary
+            \item Model version history is maintained for audit and improvement purposes
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item "Mathematics\_Evaluator\_v2.3" model has evaluated 15,678 math problem responses
+            \item "English\_Essay\_Scorer\_v1.8" model has processed 3,421 essay responses
+            \item "Science\_MCQ\_Classifier\_v3.1" model has handled 28,945 multiple choice science responses
+            \item When "Chemistry\_Evaluator\_v2.1" was updated, existing responses retain reference to the original model version
+        \end{itemize}
+\end{itemize}
+
+\textbf{6. AI Evaluation Models Self-Enhancement Loop:}
+\begin{itemize}
+    \item \textbf{Description:} AI models continuously improve through feedback from human evaluators and response patterns
+    \item \textbf{Training Data Source:} Human-validated responses serve as training data for model improvements
+    \item \textbf{Performance Metrics:} Models track accuracy, consistency, and processing speed metrics
+    \item \textbf{Version Control:} Each model update creates a new version while preserving historical evaluation records
+\end{itemize}
+
+\subsubsection{Analytics and Caching Domain ER Diagram}
+
+This diagram represents the performance monitoring, offline synchronization, and caching mechanisms.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{assets/ER/Figure4.10.png}
+    \caption{Analytics and Caching Domain ER Diagram}
+    \label{fig:analytics_er}
+\end{figure}
+
+\textbf{Detailed Relationship Analysis:}
+
+\textbf{1. Users and Offline Sync Data Relationship (1:M - One-to-Many):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} One-to-Many (1:M)
+    \item \textbf{Description:} One user can have multiple offline synchronization records for different content types, devices, and time periods, but each sync record belongs to exactly one user.
+    \item \textbf{Cardinality:} A user can have 0 to hundreds of sync records; each sync record belongs to exactly one user
+    \item \textbf{Foreign Key:} Offline Sync Data.user\_id references Users.user\_id
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item Users can sync content across multiple devices (smartphone, tablet, laptop)
+            \item Each device generates separate sync records for tracking and conflict resolution
+            \item Sync records track both downloaded content and locally-modified data awaiting upload
+            \item System maintains sync history for troubleshooting and performance analysis
+            \item Users can manage sync preferences per device and content type
+            \item Sync records are automatically cleaned up after successful synchronization and retention period
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item Student "Rahul" has 15 sync records: 8 for downloaded exam materials, 4 for completed offline quizzes, 3 for study notes
+            \item Teacher "Dr. Patel" has 12 sync records across 3 devices for accessing student performance data offline
+            \item Student "Maria" has sync records for offline access in rural area with intermittent connectivity
+        \end{itemize}
+\end{itemize}
+
+\textbf{2. Users and Performance Analytics Relationship (1:M - One-to-Many):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} One-to-Many (1:M)
+    \item \textbf{Description:} One user's activities generate multiple performance analytics records tracking their system usage, learning progress, and interaction patterns, but each analytics record corresponds to exactly one user.
+    \item \textbf{Cardinality:} A user generates 0 to thousands of analytics records; each record tracks one user's activity
+    \item \textbf{Foreign Key:} Performance Analytics.user\_id references Users.user\_id
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item Analytics records are generated automatically for all user interactions
+            \item Records include both performance metrics (response times, scores) and behavior patterns (study duration, frequency)
+            \item Data collection follows privacy regulations and user consent requirements
+            \item Analytics support personalized learning recommendations and system optimization
+            \item Aggregate analytics inform institutional reporting while protecting individual privacy
+            \item Users can access their own analytics through dashboard interfaces
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item Student "Ahmed" has 1,247 analytics records showing study session durations, exam scores, and topic preferences
+            \item Teacher "Ms. Khan" has 456 analytics records tracking content creation activity and student interaction patterns
+            \item Administrator "Mr. Shah" has 89 analytics records for system monitoring and usage pattern analysis
+        \end{itemize}
+\end{itemize}
+
+\textbf{3. Performance Analytics and Report Cache Relationship (M:M - Many-to-Many):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} Many-to-Many (M:M)
+    \item \textbf{Description:} Multiple analytics records can contribute to multiple cached reports, and each cached report can be based on multiple analytics records, creating flexible report generation.
+    \item \textbf{Cardinality:} Multiple analytics records contribute to one report; one report aggregates multiple analytics records
+    \item \textbf{Implementation:} Typically implemented through junction table "Report Analytics Sources" with metadata
+    \item \textbf{Junction Table Attributes:}
+        \begin{itemize}
+            \item report\_cache\_id (Foreign Key to Report Cache)
+            \item analytics\_id (Foreign Key to Performance Analytics)
+            \item data\_weight (contribution weight of this analytics record to the report)
+            \item aggregation\_method (sum, average, count, etc.)
+            \item filter\_criteria (any specific conditions applied to this data)
+            \item last\_included\_timestamp (when this data was last incorporated)
+        \end{itemize}
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item Reports can aggregate data from multiple time periods and user groups
+            \item Same analytics data can contribute to different types of reports (student progress, system performance, usage trends)
+            \item Cached reports are invalidated when underlying analytics data changes significantly
+            \item Report generation follows data privacy and access control rules
+            \item Analytics data older than retention period is excluded from new reports
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item "Monthly Student Progress Report" uses 15,678 analytics records from 450 students across 30 days
+            \item "System Performance Dashboard" aggregates 89,234 performance analytics records from all users
+            \item "Subject Difficulty Analysis" combines 5,621 analytics records to identify challenging topics
+        \end{itemize}
+\end{itemize}
+
+\textbf{4. Users and Report Cache Relationship (M:M - Many-to-Many):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} Many-to-Many (M:M)
+    \item \textbf{Description:} Multiple users can access the same cached report, and each user can access multiple different cached reports based on their roles and permissions.
+    \item \textbf{Cardinality:} Multiple users can access one report; one user can access multiple reports
+    \item \textbf{Implementation:} Managed through "User Report Access" junction table with permission controls
+    \item \textbf{Junction Table Attributes:}
+        \begin{itemize}
+            \item user\_id (Foreign Key to Users)
+            \item report\_cache\_id (Foreign Key to Report Cache)
+            \item access\_level (read, write, admin)
+            \item first\_accessed (timestamp of first access)
+            \item last\_accessed (timestamp of most recent access)
+            \item access\_count (number of times accessed)
+        \end{itemize}
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item Report access is controlled by user roles and organizational hierarchy
+            \item Students can only access their own performance reports and class summaries
+            \item Teachers can access reports for their students and courses
+            \item Administrators can access institution-wide reports and system metrics
+            \item Report access is logged for audit and compliance purposes
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item "Class 10 Math Performance Report" is accessed by 15 teachers and 1 principal
+            \item "Individual Student Progress Report" for student ID 1001 is accessed only by that student and their teacher
+            \item "System Usage Analytics" is accessed by 3 administrators and 1 IT manager
+        \end{itemize}
+\end{itemize}
+
+\textbf{5. Report Cache and System Configuration Relationship (M:1 - Many-to-One):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} Many-to-One (M:1)
+    \item \textbf{Description:} Multiple cached reports can be generated using the same system configuration settings, but each report uses exactly one configuration set at generation time.
+    \item \textbf{Cardinality:} Multiple reports use one configuration; each report has one configuration reference
+    \item \textbf{Foreign Key:} Report Cache.config\_id references System Configuration.config\_id
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item Configuration settings control report format, data retention, aggregation methods, and security policies
+            \item Reports generated with different configurations may show different results for same data
+            \item Configuration versioning ensures report reproducibility and audit compliance
+            \item System administrators can update configurations, but existing reports retain their original settings
+            \item Reports are automatically regenerated when configuration changes affect their validity
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item Configuration "Academic Year 2024 Settings" is used by 127 student progress reports
+            \item Configuration "Performance Monitoring v2.1" is used by 45 system analytics reports
+            \item Configuration "Privacy Compliant Reporting v1.3" is used by 89 institutional summary reports
+        \end{itemize}
+\end{itemize}
+
+\textbf{6. Offline Sync Data and System Configuration Relationship (M:1 - Many-to-One):}
+\begin{itemize}
+    \item \textbf{Relationship Type:} Many-to-One (M:1)
+    \item \textbf{Description:} Multiple offline sync operations follow the same system configuration for sync policies, data priorities, and conflict resolution, but each sync record references exactly one configuration set.
+    \item \textbf{Cardinality:} Multiple sync records use one configuration; each sync record has one configuration reference
+    \item \textbf{Foreign Key:} Offline Sync Data.config\_id references System Configuration.config\_id
+    \item \textbf{Business Rules:}
+        \begin{itemize}
+            \item Configuration controls sync frequency, data prioritization, compression settings, and conflict resolution strategies
+            \item Sync behavior can be customized for different user types (students, teachers, administrators)
+            \item Configuration updates affect future sync operations but preserve history of past operations
+            \item Emergency configurations can be activated for network outages or maintenance periods
+            \item Sync configurations include security policies for data encryption and access control
+        \end{itemize}
+    \item \textbf{Real-world Examples:}
+        \begin{itemize}
+            \item Configuration "Student Offline Standard v2.0" is used by 2,341 student sync records
+            \item Configuration "Teacher Enhanced Sync v1.5" is used by 156 teacher sync operations
+            \item Configuration "Emergency Minimal Sync v1.0" was used during 23 network outage sync operations
+        \end{itemize}
+\end{itemize}
+
+\textbf{7. Cross-Domain Performance Optimization:}
+\begin{itemize}
+    \item \textbf{Data Pipeline Integration:} Analytics data flows seamlessly into reporting cache for real-time insights
+    \item \textbf{Predictive Sync Management:} Analytics predict user offline needs to optimize sync operations
+    \item \textbf{Dynamic Configuration:} System configurations adapt based on performance analytics and usage patterns
+    \item \textbf{Cache Invalidation Strategy:} Smart cache management based on data freshness and access patterns
+\end{itemize}
 
 \newpage
 \subsection{Data Types and Size Specifications According to ER Diagram}
@@ -3009,415 +3141,145 @@ The following detailed specifications define the exact data types, sizes, and co
 
 \subsubsection{User Management Domain Tables}
 
-\textbf{Users Table:}
-\begin{table}[H]
+\paragraph{Users Table:}
+The Users table serves as the central repository for all user account information in the Chorcha EdTech platform. This table maintains comprehensive user profiles including authentication credentials, personal information, and role-based access control data. The \textbf{user\_id} field serves as the primary key, providing unique identification for each user account. The table supports multiple user roles (student, teacher, content\_creator, administrator) through the \textbf{user\_role} field, enabling role-based access control throughout the system. Critical fields include encrypted password storage, email verification status, and account activation timestamps for security and compliance purposes.
+
+\begin{figure}[H]
 \centering
+\includegraphics[width=0.6\textwidth]{assets/DBTable/Table4.2.png}
 \caption{Users Table Data Specifications}
-\footnotesize
-\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
-\hline
-\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
-\hline
-user\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL, Unique identifier for users \\
-\hline
-username & VARCHAR(50) & INDEX & NOT NULL, UNIQUE, Alphanumeric username (3-50 chars) \\
-\hline
-email & VARCHAR(100) & UNIQUE INDEX & NOT NULL, UNIQUE, Valid email format validation \\
-\hline
-password\_hash & VARCHAR(255) & - & NOT NULL, Bcrypt hashed password (minimum 8 chars) \\
-\hline
-role\_type & ENUM & INDEX & ('student','teacher','admin','content\_creator') \\
-\hline
-first\_name & VARCHAR(50) & - & NOT NULL, User's first name \\
-\hline
-last\_name & VARCHAR(50) & - & NOT NULL, User's last name \\
-\hline
-phone\_number & VARCHAR(15) & INDEX & NULL, International format validation \\
-\hline
-created\_at & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
-\hline
-last\_login & TIMESTAMP & INDEX & NULL, Tracks user activity \\
-\hline
-is\_active & BOOLEAN & INDEX & DEFAULT TRUE, Account status flag \\
-\hline
-profile\_picture & VARCHAR(500) & - & NULL, URL to profile image \\
-\hline
-\end{tabular}
-\end{table}
+\label{table:users}
+\end{figure}
 
-\textbf{User\_Sessions Table:}
-\begin{table}[H]
+\clearpage
+\paragraph{User Sessions Table:}
+The User Sessions table manages active user sessions and authentication tokens for secure access control across the platform. This table implements session-based authentication allowing users to maintain login status across multiple devices and browser sessions. The \textbf{session\_id} serves as the primary key, while \textbf{user\_id} acts as a foreign key referencing the Users table, establishing the relationship between sessions and user accounts. Key features include session expiration timestamps, device fingerprinting for security, and automatic cleanup of expired sessions. This table supports the enhanced authentication system's ability to handle peak loads through distributed session management.
+
+\begin{figure}[H]
 \centering
+\includegraphics[width=0.8\textwidth]{assets/DBTable/Table4.3.png}
 \caption{User Sessions Table Data Specifications}
-\footnotesize
-\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
-\hline
-\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
-\hline
-session\_id & VARCHAR(128) & PRIMARY KEY & NOT NULL, Unique session identifier \\
-\hline
-user\_id & INT(11) & FOREIGN KEY & REFERENCES Users(user\_id), CASCADE DELETE \\
-\hline
-session\_token & VARCHAR(255) & UNIQUE INDEX & NOT NULL, JWT or similar token \\
-\hline
-created\_at & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
-\hline
-expires\_at & TIMESTAMP & INDEX & NOT NULL, Session expiration time \\
-\hline
-is\_active & BOOLEAN & INDEX & DEFAULT TRUE \\
-\hline
-device\_info & JSON & - & NULL, Device and browser information \\
-\hline
-ip\_address & VARCHAR(45) & INDEX & NULL, Supports IPv4 and IPv6 \\
-\hline
-\end{tabular}
-\end{table}
+\label{table:user_sessions}
+\end{figure}
 
+\clearpage
 \subsubsection{Content Management Domain Tables}
 
-\textbf{Content\_Categories Table:}
-\begin{table}[H]
+\paragraph{Content Categories Table:}
+The Content Categories table provides hierarchical organization for educational content within the Chorcha platform, enabling efficient content discovery and management. This table implements a self-referencing structure that supports unlimited levels of categorization from broad subjects to specific topics. The \textbf{category\_id} serves as the primary key, while \textbf{parent\_category\_id} acts as a foreign key referencing the same table, creating the parent-child relationships necessary for hierarchical content organization. Root categories have NULL parent values, while subcategories reference their parent categories. This design supports the content management system's ability to organize questions, exams, and study materials in logical, searchable hierarchies that enhance user navigation and content discovery.
+
+\begin{figure}[H]
 \centering
+\includegraphics[width=0.8\textwidth]{assets/DBTable/Table4.4.png}
 \caption{Content Categories Table Data Specifications}
-\footnotesize
-\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
-\hline
-\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
-\hline
-category\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
-\hline
-category\_name & VARCHAR(100) & INDEX & NOT NULL, Subject or topic name \\
-\hline
-parent\_category\_id & INT(11) & FOREIGN KEY & NULL, REFERENCES Content\_Categories(category\_id) \\
-\hline
-description & TEXT & - & NULL, Detailed category description \\
-\hline
-difficulty\_level & ENUM & INDEX & ('beginner','intermediate','advanced') \\
-\hline
-display\_order & INT(11) & INDEX & DEFAULT 0, For UI ordering \\
-\hline
-is\_active & BOOLEAN & INDEX & DEFAULT TRUE \\
-\hline
-created\_at & TIMESTAMP & - & DEFAULT CURRENT\_TIMESTAMP \\
-\hline
-\end{tabular}
-\end{table}
+\label{table:content_categories}
+\end{figure}
 
-\textbf{Questions Table:}
-\begin{table}[H]
+\clearpage
+\paragraph{Questions Table:}
+The Questions table is the core repository for all educational questions and assessment items within the Chorcha platform, supporting multiple question types and rich multimedia content. The \textbf{question\_id} serves as the primary key for unique question identification. This table includes two critical foreign keys: \textbf{category\_id} references the Content Categories table for content organization, and \textbf{created\_by\_user\_id} references the Users table to track question authorship. The table supports various question types including multiple choice, subjective, true/false, and fill-in-the-blank through the \textbf{question\_type} field. Rich content support includes text formatting, mathematical equations, images, and multimedia elements stored in JSON format. The difficulty level, estimated solve time, and question status fields enable sophisticated question bank management and adaptive testing capabilities.
+
+\begin{figure}[H]
 \centering
+\includegraphics[width=0.8\textwidth]{assets/DBTable/Table4.5.png}
 \caption{Questions Table Data Specifications}
-\footnotesize
-\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
-\hline
-\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
-\hline
-question\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
-\hline
-category\_id & INT(11) & FOREIGN KEY & REFERENCES Content\_Categories(category\_id) \\
-\hline
-created\_by\_user\_id & INT(11) & FOREIGN KEY & REFERENCES Users(user\_id) \\
-\hline
-question\_text & LONGTEXT & FULLTEXT INDEX & NOT NULL, Question content with rich text \\
-\hline
-question\_type & ENUM & INDEX & ('mcq','subjective','true\_false','fill\_blank') \\
-\hline
-correct\_answer & TEXT & - & NOT NULL, Expected answer or answer key \\
-\hline
-answer\_options & JSON & - & NULL, For MCQ options and metadata \\
-\hline
-difficulty\_score & DECIMAL(3,2) & INDEX & DEFAULT 0.5, Range 0.0-1.0 \\
-\hline
-max\_score & DECIMAL(5,2) & - & DEFAULT 1.0, Maximum possible points \\
-\hline
-estimated\_time\_minutes & INT(11) & - & DEFAULT 2, Expected completion time \\
-\hline
-created\_at & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
-\hline
-last\_modified & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP ON UPDATE \\
-\hline
-is\_published & BOOLEAN & INDEX & DEFAULT FALSE \\
-\hline
-\end{tabular}
-\end{table}
+\label{table:questions}
+\end{figure}
 
-\textbf{Question\_Trust\_Scores Table:}
-\begin{table}[H]
+\clearpage
+\paragraph{Question Trust Scores Table:}
+The Question Trust Scores table implements the AI-powered quality assessment system for maintaining high content standards and reducing manual moderation workload. This table maintains a one-to-one relationship with the Questions table, where \textbf{trust\_score\_id} serves as the primary key and \textbf{question\_id} acts as a foreign key uniquely referencing each question. The core \textbf{trust\_score} field ranges from 0.0 to 1.0, representing the AI-calculated reliability and quality of each question based on user feedback, response patterns, and expert validation. Additional metrics include report frequency tracking, difficulty accuracy assessment, and AI confidence ratings. This table enables the intelligent content management system to automatically prioritize moderation efforts and filter high-quality questions for exam inclusion.
+
+\begin{figure}[H]
 \centering
+\includegraphics[width=0.8\textwidth]{assets/DBTable/Table4.6.png}
 \caption{Question Trust Scores Table Data Specifications}
-\footnotesize
-\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
-\hline
-\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
-\hline
-trust\_score\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
-\hline
-question\_id & INT(11) & FOREIGN KEY & UNIQUE, REFERENCES Questions(question\_id) \\
-\hline
-trust\_score & DECIMAL(4,3) & INDEX & DEFAULT 0.500, Range 0.000-1.000 \\
-\hline
-user\_reports\_count & INT(11) & INDEX & DEFAULT 0, Number of user reports \\
-\hline
-positive\_feedback\_count & INT(11) & - & DEFAULT 0 \\
-\hline
-negative\_feedback\_count & INT(11) & - & DEFAULT 0 \\
-\hline
-ai\_confidence\_score & DECIMAL(4,3) & INDEX & DEFAULT 0.500, AI assessment confidence \\
-\hline
-expert\_validated & BOOLEAN & INDEX & DEFAULT FALSE \\
-\hline
-last\_updated & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP ON UPDATE \\
-\hline
-quality\_metrics & JSON & - & NULL, Additional AI-generated metrics \\
-\hline
-\end{tabular}
-\end{table}
+\label{table:question_trust_scores}
+\end{figure}
 
+\clearpage
 \subsubsection{Assessment Domain Tables}
 
-\textbf{Exams Table:}
-\begin{table}[H]
+\paragraph{Exams Table:}
+The Exams table manages all examination configurations and metadata for the assessment delivery system, supporting both traditional and adaptive testing scenarios. The \textbf{exam\_id} serves as the primary key for unique exam identification, while \textbf{created\_by\_user\_id} acts as a foreign key referencing the Users table to track exam authorship and ownership. This table configures critical examination parameters including time limits, difficulty levels, question randomization settings, and accessibility options. The table supports multiple exam types (practice tests, mock exams, official assessments) and various delivery modes (timed, self-paced, adaptive). Additional features include exam scheduling, availability windows, retry policies, and offline compatibility flags that integrate with the Progressive Web App functionality for rural students with limited connectivity.
+
+\begin{figure}[H]
 \centering
+\includegraphics[width=0.8\textwidth]{assets/DBTable/Table4.7.png}
 \caption{Exams Table Data Specifications}
-\footnotesize
-\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
-\hline
-\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
-\hline
-exam\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
-\hline
-created\_by\_user\_id & INT(11) & FOREIGN KEY & REFERENCES Users(user\_id) \\
-\hline
-exam\_title & VARCHAR(200) & INDEX & NOT NULL, Exam name/title \\
-\hline
-description & TEXT & - & NULL, Detailed exam description \\
-\hline
-instructions & TEXT & - & NULL, Student instructions \\
-\hline
-start\_time & TIMESTAMP & INDEX & NULL, Scheduled start time \\
-\hline
-end\_time & TIMESTAMP & INDEX & NULL, Scheduled end time \\
-\hline
-duration\_minutes & INT(11) & - & DEFAULT 60, Exam duration \\
-\hline
-max\_attempts & INT(11) & - & DEFAULT 1, Allowed attempts per user \\
-\hline
-passing\_score & DECIMAL(5,2) & - & DEFAULT 60.00, Minimum score to pass \\
-\hline
-total\_questions & INT(11) & - & DEFAULT 0, Number of questions \\
-\hline
-randomize\_questions & BOOLEAN & - & DEFAULT FALSE \\
-\hline
-is\_published & BOOLEAN & INDEX & DEFAULT FALSE \\
-\hline
-created\_at & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
-\hline
-\end{tabular}
-\end{table}
+\label{table:exams}
+\end{figure}
 
-\textbf{Exam\_Responses Table:}
-\begin{table}[H]
+\clearpage
+\paragraph{Exam Responses Table:}
+The Exam Responses table captures all student submissions and evaluation results, serving as the central repository for assessment data and AI-powered grading information. The \textbf{response\_id} serves as the primary key, while multiple foreign keys establish relationships: \textbf{student\_user\_id} references the Users table for student identification, \textbf{exam\_id} references the Exams table for exam context, \textbf{question\_id} references the Questions table for specific question tracking, and \textbf{ai\_model\_id} references the AI Evaluation Models table for automated assessment tracking. This table stores both student answers and AI evaluation results, including confidence scores, processing timestamps, and human validation flags. The comprehensive response tracking enables detailed learning analytics, progress monitoring, and continuous improvement of AI evaluation models through feedback loops.
+
+\begin{figure}[H]
 \centering
+\includegraphics[width=0.8\textwidth]{assets/DBTable/Table4.8.png}
 \caption{Exam Responses Table Data Specifications}
-\footnotesize
-\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
-\hline
-\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
-\hline
-response\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
-\hline
-exam\_id & INT(11) & FOREIGN KEY & REFERENCES Exams(exam\_id) \\
-\hline
-user\_id & INT(11) & FOREIGN KEY & REFERENCES Users(user\_id) \\
-\hline
-question\_id & INT(11) & FOREIGN KEY & REFERENCES Questions(question\_id) \\
-\hline
-student\_answer & LONGTEXT & FULLTEXT INDEX & NULL, Student's response \\
-\hline
-ai\_score & DECIMAL(5,2) & INDEX & NULL, AI-generated score \\
-\hline
-human\_score & DECIMAL(5,2) & INDEX & NULL, Human evaluator score \\
-\hline
-final\_score & DECIMAL(5,2) & INDEX & NULL, Final assigned score \\
-\hline
-ai\_confidence & DECIMAL(4,3) & INDEX & NULL, AI confidence level \\
-\hline
-needs\_human\_review & BOOLEAN & INDEX & DEFAULT FALSE \\
-\hline
-reviewed\_by\_user\_id & INT(11) & FOREIGN KEY & NULL, REFERENCES Users(user\_id) \\
-\hline
-submitted\_at & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
-\hline
-reviewed\_at & TIMESTAMP & INDEX & NULL \\
-\hline
-time\_spent\_seconds & INT(11) & - & NULL, Time spent on question \\
-\hline
-\end{tabular}
-\end{table}
+\label{table:exam_responses}
+\end{figure}
 
-\textbf{AI\_Evaluation\_Models Table:}
-\begin{table}[H]
+\clearpage
+\paragraph{AI Evaluation Models Table:}
+The AI Evaluation Models table manages the machine learning models responsible for automated assessment and grading, supporting the platform's intelligent evaluation capabilities. The \textbf{model\_id} serves as the primary key for unique model identification, while \textbf{created\_by\_user\_id} acts as a foreign key referencing the Users table to track model development and ownership. This table stores critical model metadata including version information, training data specifications, accuracy metrics, and deployment status. The table supports multiple model types (NLP for essay grading, classification for multiple choice, mathematical expression evaluators) each optimized for specific question types and subject domains. Model performance metrics, update history, and validation results enable continuous improvement and quality assurance of the AI-powered evaluation system.
+
+\begin{figure}[H]
 \centering
+\includegraphics[width=0.8\textwidth]{assets/DBTable/Table4.9.png}
 \caption{AI Evaluation Models Table Data Specifications}
-\footnotesize
-\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
-\hline
-\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
-\hline
-model\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
-\hline
-model\_name & VARCHAR(100) & INDEX & NOT NULL, Descriptive model name \\
-\hline
-model\_version & VARCHAR(50) & INDEX & NOT NULL, Version identifier \\
-\hline
-model\_type & ENUM & INDEX & ('nlp\_evaluator','trust\_scorer','content\_analyzer') \\
-\hline
-model\_path & VARCHAR(500) & - & NOT NULL, File system or cloud path \\
-\hline
-accuracy\_score & DECIMAL(5,4) & INDEX & NULL, Model accuracy (0.0000-1.0000) \\
-\hline
-training\_data\_size & INT(11) & - & NULL, Number of training samples \\
-\hline
-training\_completion\_date & TIMESTAMP & - & NULL \\
-\hline
-is\_active & BOOLEAN & INDEX & DEFAULT FALSE \\
-\hline
-created\_at & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
-\hline
-model\_parameters & JSON & - & NULL, Hyperparameters and config \\
-\hline
-\end{tabular}
-\end{table}
+\label{table:ai_evaluation_models}
+\end{figure}
 
+\clearpage
 \subsubsection{Analytics \& Caching Domain Tables}
 
-\textbf{Offline\_Sync\_Data Table:}
-\begin{table}[H]
+\paragraph{Offline Sync Data Table:}
+The Offline Sync Data table enables the Progressive Web App functionality by managing offline content synchronization for users in low-bandwidth or intermittent connectivity environments. The \textbf{sync\_id} serves as the primary key, while \textbf{user\_id} acts as a foreign key referencing the Users table to associate sync records with specific users. Additionally, \textbf{config\_id} serves as a foreign key referencing the System Configuration table to apply appropriate sync policies. This table tracks downloaded content, pending uploads, synchronization status, and conflict resolution data for seamless offline-to-online transitions. Critical features include device identification, content versioning, compression settings, and priority queuing that ensure students can continue learning regardless of internet availability and automatically sync their progress when connectivity is restored.
+
+\begin{figure}[H]
 \centering
+\includegraphics[width=0.8\textwidth]{assets/DBTable/Table4.10.png}
 \caption{Offline Sync Data Table Data Specifications}
-\footnotesize
-\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
-\hline
-\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
-\hline
-sync\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
-\hline
-user\_id & INT(11) & FOREIGN KEY & REFERENCES Users(user\_id) \\
-\hline
-content\_type & ENUM & INDEX & ('exam','question','material','progress') \\
-\hline
-content\_id & INT(11) & INDEX & NOT NULL, ID of the content being synced \\
-\hline
-cached\_data & LONGTEXT & - & NULL, Compressed JSON data \\
-\hline
-data\_size\_bytes & INT(11) & - & NULL, Size of cached data \\
-\hline
-last\_sync\_time & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
-\hline
-sync\_status & ENUM & INDEX & ('pending','synced','failed') \\
-\hline
-device\_id & VARCHAR(255) & INDEX & NULL, Unique device identifier \\
-\hline
-sync\_priority & ENUM & INDEX & ('low','medium','high') DEFAULT 'medium' \\
-\hline
-expires\_at & TIMESTAMP & INDEX & NULL, Cache expiration time \\
-\hline
-\end{tabular}
-\end{table}
+\label{table:offline_sync_data}
+\end{figure}
 
-\textbf{Performance\_Analytics Table:}
-\begin{table}[H]
+\clearpage
+\paragraph{Performance Analytics Table:}
+The Performance Analytics table captures comprehensive system and user performance metrics to enable real-time monitoring, learning analytics, and data-driven decision making. The \textbf{analytics\_id} serves as the primary key for unique record identification, while \textbf{user\_id} acts as a foreign key referencing the Users table to associate metrics with specific users when applicable. This table aggregates diverse performance data including response times, user engagement patterns, learning progress indicators, system resource utilization, and behavioral analytics. The collected data supports multiple use cases: personalized learning recommendations, system optimization, institutional reporting, and predictive analytics for identifying at-risk students. Privacy-compliant data collection ensures user consent while providing valuable insights for platform improvement and educational outcomes enhancement.
+
+\begin{figure}[H]
 \centering
+\includegraphics[width=0.8\textwidth]{assets/DBTable/Table4.11.png}
 \caption{Performance Analytics Table Data Specifications}
-\footnotesize
-\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
-\hline
-\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
-\hline
-metric\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
-\hline
-metric\_type & VARCHAR(50) & INDEX & NOT NULL, Type of metric being recorded \\
-\hline
-metric\_name & VARCHAR(100) & INDEX & NOT NULL, Specific metric identifier \\
-\hline
-metric\_value & DECIMAL(15,6) & INDEX & NOT NULL, Numeric value of the metric \\
-\hline
-metadata & JSON & - & NULL, Additional context and dimensions \\
-\hline
-timestamp & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
-\hline
-source\_component & VARCHAR(100) & INDEX & NULL, System component generating metric \\
-\hline
-aggregation\_period & ENUM & INDEX & ('minute','hour','day','week') \\
-\hline
-tags & JSON & - & NULL, Searchable tags for metric categorization \\
-\hline
-\end{tabular}
-\end{table}
+\label{table:performance_analytics}
+\end{figure}
 
-\textbf{Report\_Cache Table:}
-\begin{table}[H]
+\clearpage
+\paragraph{Report Cache Table:}
+The Report Cache table implements intelligent caching mechanisms for frequently accessed reports and analytics, significantly improving system performance and reducing database load during peak usage periods. The \textbf{cache\_id} serves as the primary key for unique cache entry identification, while \textbf{config\_id} acts as a foreign key referencing the System Configuration table to ensure reports are generated according to current system policies. This table stores pre-computed reports, dashboard data, and analytical summaries that can be instantly retrieved rather than generated on-demand. Key features include cache expiration management, data freshness indicators, and access pattern tracking. The intelligent caching system supports the real-time reporting capabilities by maintaining up-to-date report snapshots while dramatically reducing query processing time for administrators, teachers, and students accessing performance data.
+
+\begin{figure}[H]
 \centering
+\includegraphics[width=0.8\textwidth]{assets/DBTable/Table4.12.png}
 \caption{Report Cache Table Data Specifications}
-\footnotesize
-\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
-\hline
-\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
-\hline
-cache\_id & VARCHAR(128) & PRIMARY KEY & NOT NULL, MD5 hash of parameters \\
-\hline
-report\_type & VARCHAR(100) & INDEX & NOT NULL, Type of report cached \\
-\hline
-report\_parameters & JSON & - & NOT NULL, Parameters used to generate report \\
-\hline
-cached\_result & LONGTEXT & - & NOT NULL, Compressed report data \\
-\hline
-result\_size\_bytes & INT(11) & - & NULL, Size of cached result \\
-\hline
-created\_at & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP \\
-\hline
-expires\_at & TIMESTAMP & INDEX & NOT NULL, Cache expiration time \\
-\hline
-access\_count & INT(11) & INDEX & DEFAULT 0, Number of cache hits \\
-\hline
-last\_accessed & TIMESTAMP & INDEX & NULL, Last access timestamp \\
-\hline
-\end{tabular}
-\end{table}
+\label{table:report_cache}
+\end{figure}
 
-\textbf{System\_Configuration Table:}
-\begin{table}[H]
+\clearpage
+\paragraph{System Configuration Table:}
+The System Configuration table serves as the central control mechanism for platform-wide settings, policies, and operational parameters that govern system behavior across all domains. The \textbf{config\_id} serves as the primary key for unique configuration identification, while \textbf{created\_by\_user\_id} acts as a foreign key referencing the Users table to track configuration authorship and administrative accountability. This table manages critical system parameters including sync policies, security settings, performance thresholds, AI model configurations, report generation rules, and offline functionality parameters. Version control capabilities enable configuration rollback and audit trails for compliance purposes. The centralized configuration management ensures consistent system behavior while allowing administrators to dynamically adjust platform performance, security, and functionality without requiring code deployments.
+
+\begin{figure}[H]
 \centering
+\includegraphics[width=0.8\textwidth]{assets/DBTable/Table4.13.png}
 \caption{System Configuration Table Data Specifications}
-\footnotesize
-\begin{tabular}{|L{3cm}|L{2.5cm}|L{1.5cm}|L{5cm}|}
-\hline
-\textbf{Field Name} & \textbf{Data Type} & \textbf{Key Type} & \textbf{Constraints \& Description} \\
-\hline
-config\_id & INT(11) & PRIMARY KEY & AUTO\_INCREMENT, NOT NULL \\
-\hline
-config\_key & VARCHAR(100) & UNIQUE INDEX & NOT NULL, Unique configuration identifier \\
-\hline
-config\_value & TEXT & - & NOT NULL, Configuration value \\
-\hline
-config\_type & ENUM & INDEX & ('string','integer','boolean','json') \\
-\hline
-description & TEXT & - & NULL, Human-readable description \\
-\hline
-category & VARCHAR(50) & INDEX & NULL, Configuration category \\
-\hline
-is\_active & BOOLEAN & INDEX & DEFAULT TRUE \\
-\hline
-requires\_restart & BOOLEAN & - & DEFAULT FALSE, System restart requirement \\
-\hline
-last\_modified & TIMESTAMP & INDEX & DEFAULT CURRENT\_TIMESTAMP ON UPDATE \\
-\hline
-modified\_by\_user\_id & INT(11) & FOREIGN KEY & NULL, REFERENCES Users(user\_id) \\
-\hline
-\end{tabular}
-\end{table}
+\label{table:system_configuration}
+\end{figure}
 
-\textbf{Database Performance Optimization Features:}
+\vspace{1cm}
+\subsection{Database Performance Optimization Features}
 
 The database design incorporates several performance optimization strategies:
 
@@ -3429,6 +3291,7 @@ The database design incorporates several performance optimization strategies:
     \item \textbf{Data Type Optimization:} All data types are sized appropriately to minimize storage while accommodating growth
     \item \textbf{Referential Integrity:} Foreign key constraints ensure data consistency while supporting cascading operations
 \end{enumerate}
+
 This comprehensive database design provides the robust foundation needed to support Chorcha's enhanced functionality while ensuring scalability, performance, and data integrity across all system components.
 
 \section{Form Design}

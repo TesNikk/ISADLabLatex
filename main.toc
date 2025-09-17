@@ -57,20 +57,37 @@
 \contentsline {subsubsection}{Solution to Problem 4: Optimized Data Store Performance DFD}{61}{subsubsection*.40}%
 \contentsline {section}{\numberline {4.3}Database Design}{62}{section.4.3}%
 \contentsline {subsection}{\numberline {4.3.1}Database Schema}{62}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Entity Relationship (ER) Diagram}{63}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Data Types and Size Specifications According to ER Diagram}{65}{subsection.4.3.3}%
-\contentsline {subsubsection}{User Management Domain Tables}{65}{subsubsection*.44}%
-\contentsline {subsubsection}{Content Management Domain Tables}{65}{subsubsection*.47}%
-\contentsline {subsubsection}{Assessment Domain Tables}{67}{subsubsection*.51}%
-\contentsline {subsubsection}{Analytics \& Caching Domain Tables}{68}{subsubsection*.55}%
-\contentsline {section}{\numberline {4.4}Form Design}{71}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Design Principles}{71}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Key Form Categories}{71}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}Technical Implementation}{72}{subsection.4.4.3}%
-\contentsline {subsection}{\numberline {4.4.4}User Experience Enhancements}{73}{subsection.4.4.4}%
-\contentsline {section}{\numberline {4.5}Conclusion}{73}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Key Achievements}{73}{subsection.4.5.1}%
-\contentsline {subsection}{\numberline {4.5.2}Implementation Impact}{74}{subsection.4.5.2}%
-\contentsline {subsection}{\numberline {4.5.3}Future Readiness}{74}{subsection.4.5.3}%
-\contentsline {subsection}{\numberline {4.5.4}Success Metrics}{74}{subsection.4.5.4}%
-\contentsline {subsection}{\numberline {4.5.5}Final Recommendation}{74}{subsection.4.5.5}%
+\contentsline {subsection}{\numberline {4.3.2}Entity Relationship (ER) Diagrams}{63}{subsection.4.3.2}%
+\contentsline {subsubsection}{User Management Domain ER Diagram}{64}{subsubsection*.43}%
+\contentsline {subsubsection}{Content Management Domain ER Diagram}{65}{subsubsection*.45}%
+\contentsline {subsubsection}{Assessment Domain ER Diagram}{68}{subsubsection*.47}%
+\contentsline {subsubsection}{Analytics and Caching Domain ER Diagram}{73}{subsubsection*.49}%
+\contentsline {subsection}{\numberline {4.3.3}Data Types and Size Specifications According to ER Diagram}{79}{subsection.4.3.3}%
+\contentsline {subsubsection}{User Management Domain Tables}{79}{subsubsection*.51}%
+\contentsline {paragraph}{Users Table:}{79}{paragraph*.52}%
+\contentsline {paragraph}{User Sessions Table:}{80}{paragraph*.54}%
+\contentsline {subsubsection}{Content Management Domain Tables}{81}{subsubsection*.56}%
+\contentsline {paragraph}{Content Categories Table:}{81}{paragraph*.57}%
+\contentsline {paragraph}{Questions Table:}{82}{paragraph*.59}%
+\contentsline {paragraph}{Question Trust Scores Table:}{83}{paragraph*.61}%
+\contentsline {subsubsection}{Assessment Domain Tables}{84}{subsubsection*.63}%
+\contentsline {paragraph}{Exams Table:}{84}{paragraph*.64}%
+\contentsline {paragraph}{Exam Responses Table:}{86}{paragraph*.66}%
+\contentsline {paragraph}{AI Evaluation Models Table:}{87}{paragraph*.68}%
+\contentsline {subsubsection}{Analytics \& Caching Domain Tables}{88}{subsubsection*.70}%
+\contentsline {paragraph}{Offline Sync Data Table:}{88}{paragraph*.71}%
+\contentsline {paragraph}{Performance Analytics Table:}{89}{paragraph*.73}%
+\contentsline {paragraph}{Report Cache Table:}{90}{paragraph*.75}%
+\contentsline {paragraph}{System Configuration Table:}{91}{paragraph*.77}%
+\contentsline {subsection}{\numberline {4.3.4}Database Performance Optimization Features}{91}{subsection.4.3.4}%
+\contentsline {section}{\numberline {4.4}Form Design}{92}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Design Principles}{92}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Key Form Categories}{92}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Technical Implementation}{93}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.4}User Experience Enhancements}{94}{subsection.4.4.4}%
+\contentsline {section}{\numberline {4.5}Conclusion}{94}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Key Achievements}{94}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Implementation Impact}{95}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}Future Readiness}{95}{subsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.5.4}Success Metrics}{95}{subsection.4.5.4}%
+\contentsline {subsection}{\numberline {4.5.5}Final Recommendation}{95}{subsection.4.5.5}%
