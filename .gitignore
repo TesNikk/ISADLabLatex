@@ -1,0 +1,57 @@
+# LaTeX Generated Files (Keep only .tex and .pdf)
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.idx
+*.ind
+*.ilg
+*.bbl
+*.bcf
+*.blg
+*.run.xml
+*.nav
+*.snm
+*.vrb
+*.fls
+*.figlist
+*.makefile
+*.make
+
+# Backup and temporary files
+*~
+*.backup
+*.bak
+*.swp
+*.tmp
+*-blx.bib
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# JSON, XML, SVG files (as requested)
+*.json
+*.xml
+*.svg
+
+# Other generated content
+*.pyg
+*.class
+*.jar
